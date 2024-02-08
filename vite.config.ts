@@ -11,6 +11,7 @@ import vueSetupExtend from "vite-plugin-vue-setup-extend";
 import viteCompression from "vite-plugin-compression";
 import { createHtmlPlugin } from "vite-plugin-html";
 import { enableCDN } from "./build/cdn";
+import AutoImport from "unplugin-auto-import/vite"
 
 // 当前工作目录路径
 const root: string = process.cwd();
@@ -25,10 +26,12 @@ export default defineConfig(({ mode }) => {
       vue(),
       vueJsx(),
       mockDevServerPlugin(),
-      // vant 组件自动按需引入
       Components({
         dts: "src/typings/components.d.ts",
         resolvers: [VantResolver()]
+      }),
+      AutoImport ({
+        imports: ["vue", "vue-router"], // 自动导入vue和vue-router相关api(需要pinia的话这里需要引入pinia)
       }),
       // svg icon
       createSvgIconsPlugin({

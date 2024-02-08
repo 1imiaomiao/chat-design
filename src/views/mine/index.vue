@@ -1,4 +1,4 @@
-<script setup lang="ts" name="Demo">
+<script setup lang="ts" name="Mine">
 import { getUserMsgApi } from "@/api/userMsg";
 import { onMounted, reactive } from "vue";
 
