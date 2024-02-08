@@ -1,112 +1,58 @@
-<template>
-  <section>
-    <span class="title">Varlet</span>
-    <var-space :size="[10, 10]" class="space">
-      <var-button>默认按钮</var-button>
-      <var-button type="primary">主要按钮</var-button>
-      <var-button type="info">信息按钮</var-button>
-      <var-button type="success">成功按钮</var-button>
-      <var-button type="warning">警告按钮</var-button>
-      <var-button type="danger">危险按钮</var-button>
-    </var-space>
-  </section>
-  <section>
-    <span class="title">Vant</span>
-    <div class="demo">
-      <van-button type="primary">主要按钮</van-button>
-      <van-button type="success">成功按钮</van-button>
-      <van-button type="default">默认按钮</van-button>
-      <van-button type="warning">警告按钮</van-button>
-      <van-button type="danger">危险按钮</van-button>
-    </div>
-  </section>
-  <section>
-    <span class="title">NutUI</span>
-    <div class="demo">
-      <nut-button type="primary">主要按钮</nut-button>
-      <nut-button type="info">信息按钮</nut-button>
-      <nut-button type="default">默认按钮</nut-button>
-      <nut-button type="danger">危险按钮</nut-button>
-      <nut-button type="warning">警告按钮</nut-button>
-      <nut-button type="success">成功按钮</nut-button>
-    </div>
-  </section>
-  <section>
-    <span class="title">Quark</span>
-    <div class="demo">
-      <quark-button>默认按钮</quark-button>
-      <quark-button type="primary">主要按钮</quark-button>
-      <quark-button type="success">成功按钮</quark-button>
-      <quark-button type="danger">危险按钮</quark-button>
-      <quark-button type="warning">警告按钮</quark-button>
-    </div>
-  </section>
-  <section>
-    <span class="title">Modal</span>
-    <div class="demo">
-      <var-button type="primary" @click="openLargeModal">Open large Modal</var-button>
-      <var-button type="info" @click="openSmallModal">Open Normal Modal</var-button>
-    </div>
-  </section>
-</template>
+<script setup lang="ts" name="Demo">
+import { getUserMsgApi } from "@/api/userMsg";
+import { onMounted, reactive } from "vue";
 
-<script setup name="DemoPage" lang="tsx">
-  import { openFactoryModal } from '@/components/Modal/index';
-  import 'quarkd/lib/button';
-
-  const openLargeModal = () => {
-    openFactoryModal({
-      renderComp: function () {
-        return <div>自定义内容</div>;
-      },
-    }).then((res) => {
-      console.log('确认成功', res);
-    });
-  };
-  const openSmallModal = () => {
-    openFactoryModal({
-      size: 'normal',
-      renderComp: function () {
-        return <div>自定义内容</div>;
-      },
-    }).then((res) => {
-      console.log('确认成功', res);
-    });
-  };
+const contentList = reactive([
+  "✔ ⚡ Vue3 + Vite4",
+  "✔ 🍕 TypeScript",
+  "✔ ✨ Vant4 组件库",
+  "✔ 🌀 Tailwindcss 原子类框架",
+  "✔ 🍍 Pinia 状态管理",
+  "✔ 🌓 支持深色模式",
+  "✔ Vue-router 4",
+  "✔ 支持 SVG 图标自动注册组件",
+  "✔ vw 视口适配",
+  "✔ Axios 封装",
+  "✔ 打包资源 gzip 压缩",
+  "✔ 开发环境支持 Mock 数据",
+  "✔ ESLint",
+  "✔ 首屏加载动画",
+  "✔ 开发环境调试面板"
+]);
+onMounted(()=>{
+  getUserMsgApi()
+})
 </script>
 
-<style lang="scss" scoped>
-  @import '../../styles/mixin.scss';
+<template>
+  <div class="demo-content px-[12px]">
+    <img
+      class="block w-[120px] mx-auto mb-[20px] pt-[30px]"
+      alt="Vue logo"
+      src="~@/assets/logo_melomini.png"
+    />
+    <div class="pl-[12px] border-l-[3px] border-[color:#41b883]">
+      <a
+        class="flex items-center"
+        href="https://github.com/yulimchen/vue3-h5-template"
+        target="_blank"
+      >
+        <svg-icon class="text-[20px] mr-[8px]" name="github" />
+        <h3 class="font-bold text-[18px] my-[4px]">Vue3-h5-template</h3>
+        <svg-icon class="text-[12px] ml-[5px]" name="link" />
+      </a>
+    </div>
+    <div
+      class="text-[14px] py-[2px] px-[10px] rounded-[4px] bg-[var(--color-block-background)] mt-[14px]"
+    >
+      <p class="my-[14px] leading-[24px]">
+        🌱 基于 Vue3 全家桶、TypeScript、Vite 构建工具，开箱即用的 H5
+        移动端项目基础模板
+      </p>
+    </div>
 
-  section {
-    .title {
-      display: inline-block;
-      margin-bottom: 40px;
-      font-size: 40px;
-      font-weight: 500;
-    }
-
-    &:nth-child(n) {
-      .title {
-        margin-top: 20px;
-      }
-    }
-
-    &:first-child {
-      .title {
-        margin-top: 0;
-      }
-    }
-
-    ::v-deep(.var-space) {
-      margin-bottom: 10px !important;
-    }
-  }
-
-  .demo {
-    > :nth-child(n) {
-      margin-right: 20px;
-      margin-bottom: 20px;
-    }
-  }
-</style>
+    <div class="demo-main">
+      <van-cell v-for="(item, idx) in contentList" :key="idx" :title="item" />
+    </div>
+  </div>
+</template>

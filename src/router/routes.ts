@@ -1,67 +1,41 @@
-export const routes = [
+import Layout from "@/layout/index.vue";
+import type { RouteRecordRaw } from "vue-router";
+import Demo from "@/views/demo/index.vue";
+
+const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
-    redirect: '/home',
-    component: () => import('@/layout/basic/index.vue'),
+    path: "/",
+    name: "root",
+    component: Layout,
+    redirect: { name: "Demo" },
     children: [
       {
-        path: 'home',
-        component: () => import('@/views/home/index.vue'),
+        path: "demo",
+        name: "Demo",
+        component: Demo,
         meta: {
-          title: 'tabbar.home',
-          keepAlive: true,
-        },
+          title: "主页"
+        }
       },
       {
-        path: 'list',
-        component: () => import('@/views/list/index.vue'),
+        path: "tools",
+        name: "Tools",
+        component: () => import("@/views/tools/index.vue"),
         meta: {
-          title: 'tabbar.list',
-          keepAlive: true,
-        },
+          title: "工具"
+        }
       },
       {
-        path: 'member',
-        component: () => import('@/views/member/index.vue'),
+        path: "about",
+        name: "About",
+        component: () => import("@/views/about/index.vue"),
         meta: {
-          title: 'tabbar.member',
-          keepAlive: true,
-        },
-      },
-      {
-        path: 'demo',
-        component: () => import('@/views/demo/index.vue'),
-        meta: {
-          title: 'tabbar.demo',
-          keepAlive: true,
-        },
-      },
-      {
-        name: 'listDetails',
-        path: '/details',
-        component: () => import('@/views/list/details/index.vue'),
-        meta: {
-          title: 'list.details',
-          border: false,
-        },
-      },
-    ],
-  },
-  {
-    name: 'login',
-    path: '/login',
-    component: () => import('@/views/login/index.vue'),
-    meta: {
-      title: '',
-      keepAlive: true,
-    },
-  },
-  // 匹配不到重定向会主页
-  {
-    // 找不到路由重定向到404页面
-    path: '/:pathMatch(.*)',
-    redirect: '/Home',
-  },
+          title: "关于",
+          noCache: true
+        }
+      }
+    ]
+  }
 ];
 
 export default routes;
