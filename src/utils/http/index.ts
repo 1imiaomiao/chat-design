@@ -49,14 +49,14 @@ class Http {
       (response: AxiosResponse) => {
         NProgress.done();
         // 与后端协定的返回字段
-        const { code, message, result } = response.data;
+        const { code, message, data } = response.data;
         // 判断请求是否成功
         const isSuccess =
-          result &&
+        data &&
           Reflect.has(response.data, "code") &&
           code === ResultEnum.SUCCESS;
         if (isSuccess) {
-          return result;
+          return data;
         } else {
           // 处理请求错误
           // showFailToast(message);
