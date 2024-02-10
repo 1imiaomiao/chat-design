@@ -2,52 +2,84 @@
 import { ref, reactive, onMounted } from "vue";
 const activeName = ref("like");
 import type { BlogMsg } from "@/api/userMsg";
-import { getBlogListApi } from "@/api/userMsg";
+import { getBlogListApi, getLikeListApi } from "@/api/userMsg";
 interface Props {
   userId: string;
 }
 const props = defineProps<Props>();
+const initPageInfo = {
+  pageNo: 1,
+  pageSize: 10,
+  total: 0
+};
+const activeType = ref("like");
 const blogList = ref<BlogMsg[]>([]);
-
-const getBlogList = async () => {
+const pageInfo = ref({ ...initPageInfo });
+const getLikeList = async () => {
   try {
-    const res = await getBlogListApi({ id: props.userId });
-    blogList.value = res.list;
+    const res = await getLikeListApi({
+      id: props.userId,
+      pageNo: pageInfo.value.pageNo++,
+      pageSize: pageInfo.value.pageSize
+    });
+    blogList.value.push(...res.list);
   } catch (error) {
     console.log("error", error);
   }
 };
+const getBlogList = async () => {
+  try {
+    const res = await getBlogListApi({
+      id: props.userId,
+      pageNo: pageInfo.value.pageNo++,
+      pageSize: pageInfo.value.pageSize
+    });
+    blogList.value.push(...res.list);
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+const requestBlogList = () => {
+  blogList.value = [];
+  pageInfo.value = { ...initPageInfo };
+  if (activeType.value === "like") getLikeList();
+  else getBlogList();
+};
 onMounted(() => {
-  getBlogList();
+  requestBlogList();
 });
 </script>
 <template>
   <div class="blogList">
-    <div class="blogList-head">
-      <span :class="{ 'blogList-head-active': activeName === 'like' }"
-        >点赞</span
-      >
-      <span :class="{ 'blogList-head-active': activeName === 'content' }"
-        >最近博客</span
-      >
-      <span class="blogList-head-right">查看全部</span>
-    </div>
-    <div class="blogList-list">
-      <div class="blogList-list-item" v-for="item in blogList" :key="item.id">
-        <div class="flex flex-justify-between w-full" style="color: #949aa9">
-          <img
-            src="@/assets/image/blog_cover.jpg"
-            class="w-[72px] h-[72px] mr-[12px]"
-            style="border-radius: 8px"
-          />
-          <div class="flex flex-col mb-[8px]">
-            <div>{{ item.tag }}</div>
-            <div style="color: #000; font-weight: 700">{{ item.title }}</div>
-            <div>{{ item.creatTime }}</div>
+    <van-tabs
+      v-model:active="activeType"
+      class="blogList-head"
+      @change="requestBlogList"
+    >
+      <van-tab title="喜欢" name="like"></van-tab>
+      <van-tab title="动态" name="content"></van-tab>
+    </van-tabs>
+    <div class="blogList-imgs">
+      <div class="blogList-imgs-item" v-for="item in blogList" :key="item.id">
+        <img src="@/assets/image/blog_cover.jpg" class="cover-img" />
+        <div>
+          <div class="mb-8px">{{ item.title }}</div>
+          <div class="flex" style="justify-content: space-between">
+            <div class="flex items-center gap-[8px]">
+              <img
+                src="@/assets/image/avatar_img.jpg"
+                class="w-[24px] h-[24px]"
+              />
+              <span>{{ item.authorName }}</span>
+            </div>
+            <div style="color: #999" class="flex gap-[8px] items-center">
+              <svg-icon
+                name="like"
+                :style="{ color: item.likeStatus === 1 && 'red' }"
+              />
+              <span> {{ item.likeNum }}</span>
+            </div>
           </div>
-        </div>
-        <div style="color: #949aa9" class="text-overflow">
-          {{ item.description }}
         </div>
       </div>
     </div>
@@ -55,55 +87,31 @@ onMounted(() => {
 </template>
 <style lang="less" scoped>
 .blogList {
-  background: #f2f2f2;
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  background: #fff;
   &-head {
-    display: flex;
-    justify-content: start;
+    :deep(.van-tabs__wrap) {
+      height: 24px;
+      margin-bottom: 12px;
+    }
+  }
+  &-imgs {
+    column-count: 2;
     gap: 8px;
-    color: #999;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 8px 12px;
-    &-active {
-      color: #000;
-    }
-    &-right {
-      justify-self: right;
-      color: #01b27d;
-    }
-  }
-  &-list {
-    height: calc(100% - 36px - 50px);
-    box-sizing: border-box;
-    padding: 8px 12px;
-    display: flex;
-    gap: 12px;
-    overflow: auto;
+    flex-wrap: nowrap;
     &-item {
-      width: 240px;
-      height: 90%;
-      border-radius: 8px;
-      background: #fff;
-      flex-shrink: 0;
-      padding: 8px 12px;
-      box-sizing: border-box;
+      position: relative;
+      margin-bottom: 8px;
+      .cover-img {
+        width: 100%;
+        min-height: 180px;
+        max-height: 240px;
+        border-radius: 8px;
+      }
     }
-  }
-  //   &-list ::-webkit-scrollbar {
-  //     display: none; /* Chrome Safari */
-  //   }
-  .text-overflow {
-    overflow: hidden;
-
-    text-overflow: ellipsis; //文本溢出显示省略号
-
-    display: -webkit-box;
-
-    -webkit-line-clamp: 4;
-
-    -webkit-box-orient: vertical;
-
-    width: 100%;
   }
 }
 </style>

@@ -12,7 +12,9 @@ const userMsg = ref<UserMsg>({
   blogNum: 0,
   avatar: "",
   email: "",
-  userName: ""
+  userName: "",
+  getLikeNum: 0,
+  fanNum: 0
 });
 const getUserMsg = async () => {
   try {
@@ -29,9 +31,20 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div class="flex flex-col h-[100vh]">
+  <div class="home">
     <AuthorMsg :userMsg="userMsg" />
-    <BlogList class="flex-1" :userId="userMsg.userId" />
+    <BlogList :userId="userMsg.userId" />
   </div>
 </template>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.home {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 12px 16px;
+  height: calc(100vh - 90px);
+  background: #f4f4f7;
+  gap: 12px;
+  overflow: auto;
+}
+</style>

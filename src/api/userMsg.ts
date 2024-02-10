@@ -7,6 +7,8 @@ export interface UserMsg {
   email: string;
   avatar: string;
   blogNum: number;
+  getLikeNum: number;
+  fanNum: number;
   attentionNum: number;
   commentNum: number;
 }
@@ -25,11 +27,24 @@ export interface BlogMsg {
   description: string;
   coverImg: string;
   title: string;
+  talkNum: number;
+  likeNum: number;
+  eyeNum: number;
+  authorId?: string;
+  authorName?: string;
+  likeStatus: number;
 }
 export function getBlogListApi(data: any): Promise<any> {
   return http.request({
     url: `${MOCK}/getBlogList`,
     method: "POST",
-    params:data
+    params: data
+  });
+}
+export function getLikeListApi(data: any): Promise<any> {
+  return http.request({
+    url: `${MOCK}/getLikeList`,
+    method: "POST",
+    params: data
   });
 }

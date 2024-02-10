@@ -33,12 +33,22 @@ const routes: Array<RouteRecordRaw> = [
           title: "私信",
           noCache: true
         }
-      },{
+      },
+      {
         path: "home",
         name: "Home",
         component: () => import("@/views/home/index.vue"),
         meta: {
           title: "我的",
+          noCache: true
+        }
+      },
+      {
+        path: "blog",
+        name: "Blog",
+        component: () => import("@/views/blogList/index.vue"),
+        meta: {
+          title: "博客",
           noCache: true
         }
       }
