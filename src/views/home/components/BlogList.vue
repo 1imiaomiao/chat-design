@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from "vue";
-const activeName = ref("like");
 import type { BlogMsg } from "@/api/userMsg";
+import { useRouter } from "vue-router";
 import { getBlogListApi, getLikeListApi } from "@/api/userMsg";
+
 interface Props {
   userId: string;
 }
 const props = defineProps<Props>();
+const router = useRouter();
 const initPageInfo = {
   pageNo: 1,
   pageSize: 10,
@@ -45,6 +47,17 @@ const requestBlogList = () => {
   if (activeType.value === "like") getLikeList();
   else getBlogList();
 };
+const changeLikeState = (val: BlogMsg) => {
+  const temp = blogList.value.find(ele => ele.id === val.id);
+  if (temp) temp.likeStatus = temp.likeStatus === 0 ? 1 : 0;
+  console.log(">>>>>改变喜欢状态...", temp?.likeStatus);
+};
+const skipBlogDetail = (id: string) => {
+  router.push({
+    path: "/blogDetail",
+    query: { id }
+  });
+};
 onMounted(() => {
   requestBlogList();
 });
@@ -60,7 +73,12 @@ onMounted(() => {
       <van-tab title="动态" name="content"></van-tab>
     </van-tabs>
     <div class="blogList-imgs">
-      <div class="blogList-imgs-item" v-for="item in blogList" :key="item.id">
+      <div
+        class="blogList-imgs-item"
+        v-for="item in blogList"
+        :key="item.id"
+        @click="skipBlogDetail(item.id)"
+      >
         <img src="@/assets/image/blog_cover.jpg" class="cover-img" />
         <div>
           <div class="mb-8px">{{ item.title }}</div>
@@ -75,7 +93,8 @@ onMounted(() => {
             <div style="color: #999" class="flex gap-[8px] items-center">
               <svg-icon
                 name="like"
-                :style="{ color: item.likeStatus === 1 && 'red' }"
+                :class="{ 'active-like': item.likeStatus === 1 }"
+                @click="changeLikeState(item)"
               />
               <span> {{ item.likeNum }}</span>
             </div>
@@ -110,6 +129,9 @@ onMounted(() => {
         min-height: 180px;
         max-height: 240px;
         border-radius: 8px;
+      }
+      .active-like {
+        color: red;
       }
     }
   }
