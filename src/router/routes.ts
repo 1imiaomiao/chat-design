@@ -18,11 +18,11 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: "tools",
-        name: "Tools",
-        component: () => import("@/views/tools/index.vue"),
+        path: "publish",
+        name: "Publish",
+        component: () => import("@/views/publish/index.vue"),
         meta: {
-          title: "工具"
+          title: "发布"
         }
       },
       {

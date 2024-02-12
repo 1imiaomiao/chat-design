@@ -2,16 +2,17 @@ import { http } from "@/utils/http";
 const MOCK = "https://mock.apifox.com/m1/4017690-0-default";
 
 export interface BlogDetail {
-  coverImg: string;
-  authorName: string;
-  authorAvatar: string;
+  coverImg: string | File;
+  authorName?: string;
+  authorAvatar?: string;
+  authorId: string;
   title: string;
   description: string;
-  likeNum: number;
-  likeStatus: number;
+  likeNum?: number;
+  likeStatus?: number;
   tag: string;
   createTime: string;
-  id: string;
+  id?: string;
 }
 export function getBlogDetailApi(data?: any): Promise<BlogDetail> {
   return http.request({

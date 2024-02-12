@@ -17,11 +17,11 @@ const props = defineProps<Props>();
   <div class="author-msg">
     <div>
       <div class="author-msg-title">{{ userMsg.attentionNum }}</div>
-      <div class="author-msg-text">我关注的</div>
+      <div class="author-msg-text">关注</div>
     </div>
     <div>
       <div class="author-msg-title">{{ userMsg.fanNum }}</div>
-      <div class="author-msg-text">关注我的</div>
+      <div class="author-msg-text">粉丝</div>
     </div>
     <div>
       <div class="author-msg-title">{{ userMsg.getLikeNum }}</div>

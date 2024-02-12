@@ -94,7 +94,7 @@ onMounted(() => {
               <svg-icon
                 name="like"
                 :class="{ 'active-like': item.likeStatus === 1 }"
-                @click="changeLikeState(item)"
+                @click.stop="changeLikeState(item)"
               />
               <span> {{ item.likeNum }}</span>
             </div>

@@ -13,6 +13,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const talkList = ref<TalkDetail[]>([]);
+const editRef = ref();
 const talkEditVal = ref("");
 const pageInfo = ref({ ...initPageInfo });
 
@@ -24,6 +25,31 @@ const getTalkList = async () => {
   } catch (error) {
     console.log(error, "err...");
   }
+};
+const addTalk = () => {
+  console.log("klklklkl.。。。", talkEditVal.value);
+  const temp = {
+    likeNum: 0,
+    content: talkEditVal.value,
+    authorName: "temp..",
+    createTime: "2024-10-09",
+    likeStatus: 0,
+    id: "",
+    authorAvatar: ""
+  };
+  talkList.value.unshift(temp);
+  talkEditVal.value = "";
+  editRef.value.blur();
+};
+const handleClickTalkLike = (item: any) => {
+  if (item.likeStatus === 1) {
+    item.likeStatus = 0;
+    item.likeNum--;
+    return;
+  }
+  item.likeStatus = 1;
+  item.likeNum++;
+  console.log("点赞....");
 };
 onMounted(() => {
   getTalkList();
@@ -38,8 +64,11 @@ onMounted(() => {
           <img src="@/assets/image/avatar_img.jpg" />
           {{ item.authorName }}
         </div>
-        <div class="talk-list-header-right">
-          <svg-icon :class="{ 'active-zan': item.status === 1 }" name="zan" />
+        <div class="talk-list-header-right" @click="handleClickTalkLike(item)">
+          <svg-icon
+            :class="{ 'active-zan': item.likeStatus === 1 }"
+            name="zan"
+          />
           <span>{{ item.likeNum }}</span>
         </div>
       </div>
@@ -51,9 +80,11 @@ onMounted(() => {
     <div class="talk-edit">
       <van-field
         v-model="talkEditVal"
+        ref="editRef"
         border
         placeholder="输入评论"
         class="talk-edit-input"
+        @keydown.enter="addTalk"
       >
         <template #right-icon>
           <svg-icon style="color: #999" name="edit" />
@@ -73,7 +104,7 @@ onMounted(() => {
     &-header {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 12px;
+      margin-bottom: 6px;
       &-left {
         img {
           width: 32px;
@@ -96,7 +127,7 @@ onMounted(() => {
       }
     }
     &-content {
-      margin-left: 24px;
+      margin-left: 42px;
       margin-bottom: 12px;
       &-time {
         color: #999;
@@ -105,14 +136,16 @@ onMounted(() => {
     }
   }
   &-edit {
-    position: fixed;
+    position: sticky;
     bottom: 50px;
-    background: white;
+    background: #fff;
+    opacity: 1;
     box-sizing: border-box;
     padding-inline: 16px;
     padding-bottom: 8px;
     left: 0px;
     width: 100%;
+    z-index: 1;
     &-input {
       width: 100%;
       border: 1px solid #999;
