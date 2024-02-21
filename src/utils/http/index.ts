@@ -8,6 +8,13 @@ import { ContentTypeEnum, ResultEnum } from "@/enums/requestEnum";
 import NProgress from "../progress";
 import { showFailToast } from "vant";
 import "vant/es/toast/style";
+import { useGlobalToken } from "@/utils/useModalToken";
+
+interface RespondBody {
+  code: number;
+  message: string;
+  result: any;
+}
 
 // 默认 axios 实例请求配置
 const configDefault = {
@@ -27,13 +34,14 @@ class Http {
 
   // 请求拦截
   private httpInterceptorsRequest(): void {
+    const token = useGlobalToken();
     Http.axiosInstance.interceptors.request.use(
       config => {
         NProgress.start();
         // 发送请求前，可在此携带 token
-        // if (token) {
-        //   config.headers['token'] = token
-        // }
+        if (token) {
+          config.headers["token"] = token;
+        }
         return config;
       },
       (error: AxiosError) => {
@@ -46,17 +54,17 @@ class Http {
   // 响应拦截
   private httpInterceptorsResponse(): void {
     Http.axiosInstance.interceptors.response.use(
-      (response: AxiosResponse) => {
+      (response: AxiosResponse<RespondBody>) => {
         NProgress.done();
         // 与后端协定的返回字段
-        const { code, message, data } = response.data;
+        const { code, message, result } = response.data;
         // 判断请求是否成功
         const isSuccess =
-        data &&
+          result &&
           Reflect.has(response.data, "code") &&
           code === ResultEnum.SUCCESS;
         if (isSuccess) {
-          return data;
+          return result;
         } else {
           // 处理请求错误
           // showFailToast(message);

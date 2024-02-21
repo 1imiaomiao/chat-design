@@ -45,4 +45,8 @@ const tabbarData = reactive([
     }
   }
 ]);
+const exceptRouterName = ["Login"];
+defineExpose({
+  exceptRouterName
+});
 </script>

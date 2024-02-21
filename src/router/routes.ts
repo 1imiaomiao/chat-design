@@ -10,6 +10,14 @@ const routes: Array<RouteRecordRaw> = [
     redirect: { name: "Mine" },
     children: [
       {
+        path: "login",
+        name: "Login",
+        component: () => import("@/views/login/index.vue"),
+        meta: {
+          title: "登录"
+        }
+      },
+      {
         path: "mine",
         name: "Mine",
         component: Mine,
