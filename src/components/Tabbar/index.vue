@@ -15,6 +15,7 @@
 import { ref, reactive } from "vue";
 
 const active = ref(0);
+
 const tabbarData = reactive([
   {
     icon: "wap-home-o",
@@ -45,8 +46,4 @@ const tabbarData = reactive([
     }
   }
 ]);
-const exceptRouterName = ["Login"];
-defineExpose({
-  exceptRouterName
-});
 </script>

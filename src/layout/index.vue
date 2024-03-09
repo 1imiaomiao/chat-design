@@ -5,16 +5,16 @@ import { useCachedViewStoreHook } from "@/store/modules/cachedView";
 import { useDarkMode } from "@/hooks/useToggleDarkMode";
 import { useRoute } from "vue-router";
 import { computed, ref } from "vue";
-import router from "@/router";
 
+const exceptRouterName = ["Login"];
 const route = useRoute();
-const tabbarRef = ref();
+
+// const tabbarRef = ref();
 const cachedViews = computed(() => {
   return useCachedViewStoreHook().cachedViewList;
 });
-const routeName = computed(() => route.name);
 const showTabbar = computed(() =>
-  tabbarRef.value?.exceptRouterName.indexOf(routeName) === -1 ? true : false
+  exceptRouterName.indexOf(route.name as string) === -1 ? true : false
 );
 </script>
 
@@ -27,7 +27,7 @@ const showTabbar = computed(() =>
           <component :is="Component" />
         </keep-alive>
       </router-view>
-      <tabbar ref="tabbarRef" v-if="showTabbar" />
+      <tabbar v-if="showTabbar" />
     </van-config-provider>
   </div>
 </template>

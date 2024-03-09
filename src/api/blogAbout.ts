@@ -1,5 +1,6 @@
 import { http } from "@/utils/http";
 const MOCK = "https://mock.apifox.com/m1/4017690-0-default";
+const BASEURL = "http://localhost:9000/v1/admin";
 
 export interface BlogDetail {
   coverImg: string | File;
@@ -35,5 +36,22 @@ export function getBlogTalkDetailApi(data?: any): Promise<any> {
     url: `${MOCK}/getTalkList`,
     params: data,
     method: "Post"
+  });
+}
+
+export interface BlogCreate {
+  userId?: string;
+  content: string;
+  title: string;
+  coverImg: { file: File | File[] } | null;
+}
+export function createBlogApi(data: any) {
+  return http.request({
+    url: `${BASEURL}/article/create`,
+    method: "post",
+    data,
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
   });
 }

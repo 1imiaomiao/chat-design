@@ -5,6 +5,7 @@ import { registerApi, getCodeTextApi, loginApi } from "@/api/login";
 import { useGlobalToken } from "@/utils/useModalToken";
 import { useRouter } from "vue-router";
 import { showNotify } from "vant";
+import { useUserInfoStoreHook } from "@/store/modules/userInfo";
 
 interface LoginMsg {
   username: string;
@@ -15,6 +16,8 @@ interface LoginMsg {
 }
 const router = useRouter();
 const activeTab = ref("login");
+// const userInforStore = useUserInfoStore();
+
 const loginMsg = ref<LoginMsg>({
   username: "",
   password: "",
@@ -40,12 +43,19 @@ const confirmLogin = async () => {
       ...loginMsg.value,
       password: md5(loginMsg.value.password)
     });
+    const { id, username } = res;
+    useUserInfoStoreHook().changeUserInfo({
+      id,
+      username,
+      lastLoginTime: Date.now()
+    });
     token.value = res.token;
   } catch (error) {
-    console.log(error);
+    return Promise.reject();
   }
 };
 const handleClickLogin = async () => {
+  console.log("!!!!!!");
   await confirmLogin();
   router.push("/");
 };
@@ -55,6 +65,7 @@ const onSubmitRegister = async () => {
       ...loginMsg.value,
       password: md5(loginMsg.value.password)
     });
+    console.log(">>>>res", res);
     showNotify({ message: "注册成功，请重新登录~", type: "success" });
     activeTab.value = "login";
   } catch (error) {
@@ -62,6 +73,7 @@ const onSubmitRegister = async () => {
   }
 };
 </script>
+
 <template>
   <div class="login">
     <div class="login-mask"></div>

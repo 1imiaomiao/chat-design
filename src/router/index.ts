@@ -7,6 +7,8 @@ import routes from "./routes";
 import { useCachedViewStoreHook } from "@/store/modules/cachedView";
 import NProgress from "@/utils/progress";
 import setPageTitle from "@/utils/set-page-title";
+import { useGlobalToken } from "@/utils/useModalToken";
+import { showNotify } from "vant";
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -21,6 +23,16 @@ export interface toRouteType extends RouteLocationNormalized {
 }
 
 router.beforeEach((to: toRouteType, from, next) => {
+  const token = useGlobalToken();
+  // console.log(">>>>",to)
+  // if(to)
+  if (!token.value && to.name !== "Login") {
+    showNotify({
+      message: "你还未登录,请先登录",
+      duration: 1500
+    });
+    next({ name: "Login" });
+  }
   NProgress.start();
   // 路由缓存
   useCachedViewStoreHook().addCachedView(to);

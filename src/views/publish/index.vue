@@ -1,10 +1,10 @@
 <script setup lang="ts" name="Publish">
 import EditBlock from "./components/EditBlock.vue";
-import { ref, reactive } from "vue";
+import { ref } from "vue";
 const editRef = ref();
 const onSubmit = () => {
-  editRef.value.formRef.validate();
-  console.log("submit....");
+  console.log(">>>>>");
+  editRef.value.handleCreateArticle();
 };
 </script>
 <template>
@@ -23,10 +23,5 @@ const onSubmit = () => {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  // &-back {
-  //   color: #999;
-  //   font-weight: 700;
-  //   font-size: 32px;
-  // }
 }
 </style>

@@ -9,13 +9,14 @@ export function getCodeTextApi(): Promise<any> {
 }
 export function registerApi(data: any) {
   return http.request<any>({
-    url: `${BASEURL}/createUsers`,
+    url: `${BASEURL}/user/create`,
     method: "POST",
     data
   });
 }
 
 export function loginApi(data?: any): Promise<any> {
+  console.log(">>>>logggg>", data);
   return http.request({
     method: "POST",
     data,
