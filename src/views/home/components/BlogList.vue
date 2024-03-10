@@ -47,12 +47,10 @@ const userMsg = computed(() => useUserInfoStore().userInfo);
 const getLikeList = async () => {
   try {
     const res = await getLikeListApi({
-      id: props.userId, // 查看的博文列表作者的id
-      browseId: userMsg.value.id, //浏览者的id
-      pageNo: pageInfo.value.pageNo++,
-      pageSize: pageInfo.value.pageSize
+      userId: props.userId // 查看的博文列表作者的id
     });
     blogList.value.push(...res.list);
+    pageInfo.value.total = res.total;
   } catch (error) {
     console.log("error", error);
   }
@@ -78,12 +76,7 @@ const requestBlogList = () => {
   else getBlogList();
 };
 const changeLikeState = async (temp: BlogMsg) => {
-  // const temp = blogList.value.find(ele => ele.id === val.id);
-  // if (temp) temp.likeStatus = temp.likeStatus === 0 ? 1 : 0;
-  // console.log(">>>>>val", val);
-  // temp.likeStatus = temp.likeStatus === 0 ? 1 : 0;
-  // console.log(">>>>>改变喜欢状态...", temp?.likeStatus);
-  // 点赞，改不喜欢为喜欢
+  console.log(">>>>", temp);
   if (temp.likeStatus === 1) {
     try {
       await changeLikeStatusApi({

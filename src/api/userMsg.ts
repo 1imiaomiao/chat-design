@@ -44,9 +44,9 @@ export function getBlogListApi(data: any): Promise<any> {
 }
 export function getLikeListApi(data: any): Promise<any> {
   return http.request({
-    url: `${MOCK}/getLikeList`,
+    url: `${BASEURL}/article/likeList`,
     method: "POST",
-    params: data
+    data
   });
 }
 

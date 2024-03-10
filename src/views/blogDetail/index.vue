@@ -6,13 +6,13 @@ import BlogMsgBlock from "./components/BlogMsgBlock.vue";
 import TalkList from "./components/BlogTalkList.vue";
 
 const route = useRoute();
-const id = computed(() => route.query.id);
+const id = computed(() => route.query.id as string);
 </script>
 <template>
   <div class="blogDetail-container">
-    <BlogMsgBlock id="id" />
+    <BlogMsgBlock :id="id" />
     <van-divider />
-    <TalkList id="id" />
+    <TalkList :id="id" />
   </div>
 </template>
 <style lang="less" scoped>

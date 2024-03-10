@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import type { BlogDetail } from "@/api/blogAbout";
 import { getBlogDetailApi } from "@/api/blogAbout";
 import { useRouter } from "vue-router";
+import { showNotify } from "vant";
+import { useUserInfoStore } from "@/store/modules/userInfo";
 
 interface Props {
   id: string;
@@ -12,30 +14,38 @@ const props = defineProps<Props>();
 const blogDetail = ref<BlogDetail>({
   coverImg: "",
   authorName: "",
-  authorAvatar: "",
+  userAvatar: "",
   title: "",
-  description: "",
-  likeNum: 0,
+  content: "",
+  likeCount: 0,
+  talkCount: 0,
   likeStatus: 0,
-  tag: "",
-  createTime: "",
-  id: ""
+  createdAt: "",
+  id: "",
+  authorId: ""
 });
+const userInfo = computed(() => useUserInfoStore().userInfo);
+
 const getBlogDetail = async () => {
   try {
-    const res = await getBlogDetailApi({ id: props.id });
+    const res = await getBlogDetailApi({
+      articleId: props.id,
+      browseId: userInfo.value.id
+    });
     blogDetail.value = res;
-  } catch (error) {
+    console.log(">>>", res, blogDetail.value);
+  } catch (error: any) {
+    showNotify(error.message);
     console.log(error, "err...");
   }
 };
 const handleClikeLike = () => {
   if (blogDetail.value.likeStatus === 1) {
     blogDetail.value.likeStatus = 0;
-    blogDetail.value.likeNum--;
+    blogDetail.value.likeCount--;
   } else {
     blogDetail.value.likeStatus = 1;
-    blogDetail.value.likeNum++;
+    blogDetail.value.likeCount++;
   }
 };
 const skipRouterBack = () => {
@@ -55,12 +65,12 @@ onMounted(() => {
   <div class="blogDetail">
     <div class="blogDetail-header">
       <svg-icon name="back" @click="skipRouterBack" />
-      <img src="@/assets/image/avatar_img.jpg" @click="skipPersonHome" />
+      <img :src="blogDetail.userAvatar" @click="skipPersonHome" />
       <span>{{ blogDetail.authorName }}</span>
     </div>
-    <img class="blogDetail-cover" src="@/assets/image/blog_cover.jpg" />
+    <img class="blogDetail-cover" :src="blogDetail.coverImg" />
     <div class="blogDetail-title">{{ blogDetail.title }}</div>
-    <div class="blogDetail-text">{{ blogDetail.description }}</div>
+    <div class="blogDetail-text">{{ blogDetail.content }}</div>
     <div class="blogDetail-otherMsg">
       <div
         class="blogDetail-otherMsg-like"
@@ -68,9 +78,9 @@ onMounted(() => {
         @click="handleClikeLike"
       >
         <svg-icon name="like" />
-        {{ blogDetail.likeNum }}
+        {{ blogDetail.likeCount }}
       </div>
-      <div class="blogDetail-otherMsg-time">{{ blogDetail.createTime }}</div>
+      <div class="blogDetail-otherMsg-time">{{ blogDetail.createdAt }}</div>
     </div>
   </div>
 </template>
@@ -88,7 +98,7 @@ onMounted(() => {
   }
   &-cover {
     width: 100%;
-    max-height: 240px;
+    max-height: 320px;
     border-radius: 8px;
   }
   &-header {

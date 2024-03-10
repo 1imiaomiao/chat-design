@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, computed } from "vue";
 import type { TalkDetail } from "@/api/blogAbout";
-import { getBlogTalkDetailApi } from "@/api/blogAbout";
+import { getBlogTalkDetailApi, queryBlogTalkApi } from "@/api/blogAbout";
+import { useUserInfoStore } from "@/store/modules/userInfo";
+import { showNotify } from "vant";
+
 const initPageInfo = {
   pageNo: 0,
   pageSize: 10,
@@ -16,30 +19,53 @@ const talkList = ref<TalkDetail[]>([]);
 const editRef = ref();
 const talkEditVal = ref("");
 const pageInfo = ref({ ...initPageInfo });
+const activeTalkId = ref<string | number>(-1);
 
-const getTalkList = async () => {
+const userInfo = computed(() => useUserInfoStore().userInfo);
+
+const getTalkList = async (parentId = -1) => {
   try {
-    const res = await getBlogTalkDetailApi({ id: props.id });
-    talkList.value = res.list;
-    pageInfo.value.total = res.total;
+    const res = await getBlogTalkDetailApi({
+      articleId: props.id,
+      parentId,
+      userId: userInfo.value.id
+    });
+    talkList.value = res;
+    // pageInfo.value.total = res.total;
   } catch (error) {
     console.log(error, "err...");
   }
 };
-const addTalk = () => {
+const addTalk = async () => {
   console.log("klklklkl.。。。", talkEditVal.value);
-  const temp = {
-    likeNum: 0,
-    content: talkEditVal.value,
-    authorName: "temp..",
-    createTime: "2024-10-09",
-    likeStatus: 0,
-    id: "",
-    authorAvatar: ""
-  };
-  talkList.value.unshift(temp);
-  talkEditVal.value = "";
-  editRef.value.blur();
+  try {
+    const id = await queryBlogTalkApi({
+      articleId: props.id,
+      userId: userInfo.value.id,
+      content: talkEditVal.value,
+      parentId: activeTalkId.value
+    });
+    const temp = {
+      likeCount: 0,
+      userId: userInfo.value.id,
+      content: talkEditVal.value,
+      username: userInfo.value.username,
+      createdAt: new Date(),
+      likeStatus: 0,
+      id,
+      coverImg: userInfo.value.coverImg
+    };
+    talkList.value.unshift(temp);
+    talkEditVal.value = "";
+    editRef.value.blur();
+  } catch (error: any) {
+    showNotify(error.message);
+  }
+};
+const handleWeakUpTalk = (id: string) => {
+  activeTalkId.value = id;
+  editRef.value.focus();
+  // addTalk(id);
 };
 const handleClickTalkLike = (item: any) => {
   if (item.likeStatus === 1) {
@@ -61,20 +87,20 @@ onMounted(() => {
     <div class="talk-list" v-for="item in talkList" :key="item.id">
       <div class="talk-list-header">
         <div class="talk-list-header-left">
-          <img src="@/assets/image/avatar_img.jpg" />
-          {{ item.authorName }}
+          <img :src="item.coverImg" />
+          {{ item.username }}
         </div>
         <div class="talk-list-header-right" @click="handleClickTalkLike(item)">
           <svg-icon
             :class="{ 'active-zan': item.likeStatus === 1 }"
             name="zan"
           />
-          <span>{{ item.likeNum }}</span>
+          <span>{{ item.likeCount }}</span>
         </div>
       </div>
-      <div class="talk-list-content">
+      <div class="talk-list-content" @click="handleWeakUpTalk(item.id)">
         <div>{{ item.content }}</div>
-        <div class="talk-list-content-time">{{ item.createTime }}</div>
+        <div class="talk-list-content-time">{{ item.createdAt }}</div>
       </div>
     </div>
     <div class="talk-edit">
@@ -84,7 +110,8 @@ onMounted(() => {
         border
         placeholder="输入评论"
         class="talk-edit-input"
-        @keydown.enter="addTalk"
+        @click="activeTalkId = -1"
+        @keydown.enter="addTalk()"
       >
         <template #right-icon>
           <svg-icon style="color: #999" name="edit" />

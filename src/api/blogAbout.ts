@@ -3,38 +3,48 @@ const MOCK = "https://mock.apifox.com/m1/4017690-0-default";
 const BASEURL = "http://localhost:9000/v1/admin";
 
 export interface BlogDetail {
-  coverImg: string | File;
+  coverImg: string;
   authorName?: string;
   authorAvatar?: string;
   authorId: string;
   title: string;
-  description: string;
-  likeNum?: number;
+  content: string;
+  likeCount: number;
   likeStatus?: number;
-  tag: string;
-  createTime: string;
+  tag?: string;
+  createdAt: string;
   id?: string;
+  userAvatar: string;
+  talkCount?: number;
 }
 export function getBlogDetailApi(data?: any): Promise<BlogDetail> {
   return http.request({
-    url: `${MOCK}/getBlogDetail`,
-    params: data,
-    method: "Post"
+    url: `${BASEURL}/article/detail`,
+    data,
+    method: "post"
   });
 }
 export interface TalkDetail {
-  likeNum: number;
+  likeCount: number;
   content: string;
-  authorName: string;
-  createTime: string;
+  username: string;
+  userId: string;
+  coverImg: string;
+  createdAt: string | Date;
   likeStatus: number;
   id: string;
-  authorAvatar: string;
 }
 export function getBlogTalkDetailApi(data?: any): Promise<any> {
   return http.request({
-    url: `${MOCK}/getTalkList`,
-    params: data,
+    url: `${BASEURL}/comment/query`,
+    data,
+    method: "Post"
+  });
+}
+export function queryBlogTalkApi(data?: any): Promise<any> {
+  return http.request({
+    url: `${BASEURL}/comment/create`,
+    data,
     method: "Post"
   });
 }
