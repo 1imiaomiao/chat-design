@@ -1,40 +1,17 @@
+// stores/counter.js
 import { defineStore } from "pinia";
-import { store } from "@/store";
 
-// const userInfo = "__dark_mode__";
-const getUserInfo = () => {
-  return (
-    JSON.parse(window.localStorage.getItem("userInfo") || "") || {
-      id: "",
-      username: "",
-      lastLoginTime: ""
-    }
-  );
-};
-
-export const useUserInfoStore = defineStore({
-  id: "userInfo",
-  state: () => ({
-    userInfo: getUserInfo()
-  }),
+export const useUserInfoStore = defineStore("counter", {
+  state: () => {
+    const temp = window.localStorage.getItem("userInfo");
+    return { userInfo: temp ? JSON.parse(temp) : {} };
+  },
+  // 也可以这样定义
+  // state: () => ({ count: 0 })
   actions: {
     changeUserInfo(userInfo: any) {
       this.userInfo = userInfo;
-      window.localStorage.setItem("userInfo", JSON.stringify(this.userInfo));
+      window.localStorage.setItem("userInfo", JSON.stringify(userInfo));
     }
-    // toggleDarkMode() {
-    //   this.darkMode = !this.darkMode;
-    //   if (this.darkMode) {
-    //     document.documentElement.classList.add("dark");
-    //     window.localStorage.setItem(darkModeKey, "true");
-    //   } else {
-    //     document.documentElement.classList.remove("dark");
-    //     window.localStorage.setItem(darkModeKey, "false");
-    //   }
-    // }
   }
 });
-
-export function useUserInfoStoreHook() {
-  return useUserInfoStore(store);
-}

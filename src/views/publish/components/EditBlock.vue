@@ -3,11 +3,12 @@ import { ref, computed } from "vue";
 import type { UploaderFileListItem } from "vant";
 import type { BlogCreate } from "@/api/blogAbout";
 import { createBlogApi } from "@/api/blogAbout";
-import { useUserInfoStoreHook } from "@/store/modules/userInfo";
+import { useUserInfoStore } from "@/store/modules/userInfo";
 import { showNotify } from "vant";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
+
 const blogMsg = ref<BlogCreate>({
   coverImg: null,
   title: "",
@@ -16,7 +17,7 @@ const blogMsg = ref<BlogCreate>({
 
 const formRef = ref();
 
-const userInfo = computed(() => useUserInfoStoreHook().userInfo);
+const userInfo = computed(() => useUserInfoStore().userInfo);
 const fileProxy = computed<UploaderFileListItem[]>({
   get: () => {
     return !blogMsg.value.coverImg

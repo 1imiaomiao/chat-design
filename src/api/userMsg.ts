@@ -1,4 +1,5 @@
 import { http } from "@/utils/http";
+const BASEURL = "http://localhost:9000/v1/admin";
 
 const MOCK = "https://mock.apifox.com/m1/4017690-0-default";
 export interface UserMsg {
@@ -24,21 +25,20 @@ export interface BlogMsg {
   id: string;
   tag: string;
   creatTime: string;
-  description: string;
+  content: string;
   coverImg: string;
   title: string;
-  talkNum: number;
-  likeNum: number;
-  eyeNum: number;
+  talkCount: number;
+  likeCount: number;
   authorId?: string;
   authorName?: string;
   likeStatus: number;
 }
 export function getBlogListApi(data: any): Promise<any> {
   return http.request({
-    url: `${MOCK}/getBlogList`,
+    url: `${BASEURL}/article/list`,
     method: "POST",
-    params: data
+    data
   });
 }
 export function getLikeListApi(data: any): Promise<any> {

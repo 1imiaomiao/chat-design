@@ -5,7 +5,7 @@ import { registerApi, getCodeTextApi, loginApi } from "@/api/login";
 import { useGlobalToken } from "@/utils/useModalToken";
 import { useRouter } from "vue-router";
 import { showNotify } from "vant";
-import { useUserInfoStoreHook } from "@/store/modules/userInfo";
+import { useUserInfoStore } from "@/store/modules/userInfo";
 
 interface LoginMsg {
   username: string;
@@ -43,14 +43,21 @@ const confirmLogin = async () => {
       ...loginMsg.value,
       password: md5(loginMsg.value.password)
     });
-    const { id, username } = res;
-    useUserInfoStoreHook().changeUserInfo({
+    const { id, username, fanNum, followNum, likeNum, email, coverImg } = res;
+    useUserInfoStore().changeUserInfo({
       id,
       username,
+      email,
+      coverImg,
+      fanNum,
+      followNum,
+      likeNum,
       lastLoginTime: Date.now()
     });
     token.value = res.token;
   } catch (error) {
+    console.log(">>>>>>", error);
+    showNotify({ type: "warning", message: "接口报错~" });
     return Promise.reject();
   }
 };

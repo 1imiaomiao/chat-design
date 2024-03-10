@@ -1,22 +1,27 @@
 <script setup lang="ts">
-import { ref, reactive } from "vue";
-import type { UserMsg } from "@/api/userMsg";
-interface Props {
-  userMsg: UserMsg;
-}
-const props = defineProps<Props>();
+import { ref, reactive, computed } from "vue";
+import { useUserInfoStore } from "@/store/modules/userInfo";
+
+const userStore = useUserInfoStore();
+// const userMsg = computed(()=>useUserInfoStore.useInfo)
+// import type { UserMsg } from "@/api/userMsg";
+// interface Props {
+//   userMsg: UserMsg;
+// }
+// const props = defineProps<Props>();
+const userMsg = computed(() => userStore.userInfo);
 </script>
 <template>
   <div class="author-head">
-    <img src="@/assets/image/avatar_img.jpg" class="author-head-img" />
+    <img :src="userMsg.coverImg" class="author-head-img" />
     <div>
-      <div class="author-head-title">{{ userMsg.userName }}</div>
-      <div class="author-head-text">ID:{{ userMsg.userId }}</div>
+      <div class="author-head-title">{{ userMsg.username }}</div>
+      <div class="author-head-text">ID:{{ userMsg.id }}</div>
     </div>
   </div>
   <div class="author-msg">
     <div>
-      <div class="author-msg-title">{{ userMsg.attentionNum }}</div>
+      <div class="author-msg-title">{{ userMsg.followNum }}</div>
       <div class="author-msg-text">关注</div>
     </div>
     <div>
@@ -24,7 +29,7 @@ const props = defineProps<Props>();
       <div class="author-msg-text">粉丝</div>
     </div>
     <div>
-      <div class="author-msg-title">{{ userMsg.getLikeNum }}</div>
+      <div class="author-msg-title">{{ userMsg.likeNum }}</div>
       <div class="author-msg-text">收获的喜欢</div>
     </div>
   </div>

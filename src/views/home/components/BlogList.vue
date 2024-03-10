@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, computed } from "vue";
 import type { BlogMsg } from "@/api/userMsg";
 import { useRouter } from "vue-router";
 import { getBlogListApi, getLikeListApi } from "@/api/userMsg";
+import { useUserInfoStore } from "@/store/modules/userInfo";
 
 interface Props {
   userId: string;
@@ -17,10 +18,14 @@ const initPageInfo = {
 const activeType = ref("like");
 const blogList = ref<BlogMsg[]>([]);
 const pageInfo = ref({ ...initPageInfo });
+
+const userMsg = computed(() => useUserInfoStore().userInfo);
+
 const getLikeList = async () => {
   try {
     const res = await getLikeListApi({
-      id: props.userId,
+      id: props.userId, // 查看的博文列表作者的id
+      browseId: userMsg.value.id, //浏览者的id
       pageNo: pageInfo.value.pageNo++,
       pageSize: pageInfo.value.pageSize
     });
@@ -32,11 +37,13 @@ const getLikeList = async () => {
 const getBlogList = async () => {
   try {
     const res = await getBlogListApi({
-      id: props.userId,
+      userId: props.userId, // 查看的博文列表作者的id
+      browseId: userMsg.value.id, //浏览者的id
       pageNo: pageInfo.value.pageNo++,
       pageSize: pageInfo.value.pageSize
     });
-    blogList.value.push(...res.list);
+    console.log("res", res);
+    blogList.value.push(...res);
   } catch (error) {
     console.log("error", error);
   }
@@ -84,10 +91,7 @@ onMounted(() => {
           <div class="mb-8px">{{ item.title }}</div>
           <div class="flex" style="justify-content: space-between">
             <div class="flex items-center gap-[8px]">
-              <img
-                src="@/assets/image/avatar_img.jpg"
-                class="w-[24px] h-[24px]"
-              />
+              <img :src="item.coverImg" class="w-[24px] h-[24px]" />
               <span>{{ item.authorName }}</span>
             </div>
             <div style="color: #999" class="flex gap-[8px] items-center">
@@ -96,7 +100,7 @@ onMounted(() => {
                 :class="{ 'active-like': item.likeStatus === 1 }"
                 @click.stop="changeLikeState(item)"
               />
-              <span> {{ item.likeNum }}</span>
+              <span> {{ item.likeCount }}</span>
             </div>
           </div>
         </div>
