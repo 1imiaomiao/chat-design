@@ -7,30 +7,6 @@ import BlogList from "./components/BlogList.vue";
 import { useUserInfoStore } from "@/store/modules/userInfo";
 
 const userMsg = computed(() => useUserInfoStore().userInfo);
-// const userMsg = ref<UserMsg>({
-//   userId: "",
-//   commentNum: 0,
-//   attentionNum: 0,
-//   blogNum: 0,
-//   avatar: "",
-//   email: "",
-//   userName: "",
-//   getLikeNum: 0,
-//   fanNum: 0
-// });
-// const getUserMsg = async () => {
-//   try {
-//     const res = await getUserMsgApi();
-//     userMsg.value = res;
-//     console.log("susssss", userMsg.value);
-//   } catch (error) {
-//     console.log(">>>>>error", error);
-//   }
-// };
-// onMounted(async () => {
-//   // getUserMsg();
-//   // getUserMsgApi();
-// });
 </script>
 <template>
   <div class="home">
@@ -44,9 +20,9 @@ const userMsg = computed(() => useUserInfoStore().userInfo);
   flex-direction: column;
   box-sizing: border-box;
   padding: 12px 16px;
-  height: calc(100vh - 90px);
+  height: calc(100vh - 30px);
   background: #f4f4f7;
   gap: 12px;
-  overflow: auto;
+  overflow: hidden;
 }
 </style>

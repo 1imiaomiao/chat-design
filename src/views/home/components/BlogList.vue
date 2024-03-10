@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from "vue";
+import { ref, toRefs, onMounted, computed, watchEffect } from "vue";
 import type { BlogMsg } from "@/api/userMsg";
 import { useRouter } from "vue-router";
-import { getBlogListApi, getLikeListApi } from "@/api/userMsg";
+import {
+  getBlogListApi,
+  getLikeListApi,
+  changeLikeStatusApi
+} from "@/api/userMsg";
 import { useUserInfoStore } from "@/store/modules/userInfo";
+// import { vScroll } from "@vueuse/components";
+import { useScroll } from "@vueuse/core";
+import { showNotify } from "vant";
+// import { useInfiniteScroll } from "@vueuse/core";
 
 interface Props {
   userId: string;
@@ -12,12 +20,27 @@ const props = defineProps<Props>();
 const router = useRouter();
 const initPageInfo = {
   pageNo: 1,
-  pageSize: 10,
+  pageSize: 5,
   total: 0
 };
-const activeType = ref("like");
+const activeType = ref<"like" | "content">("like");
 const blogList = ref<BlogMsg[]>([]);
 const pageInfo = ref({ ...initPageInfo });
+const el = ref<HTMLElement>();
+const { arrivedState, directions } = useScroll(el);
+const { bottom } = toRefs(arrivedState);
+const { bottom: toBottom } = toRefs(directions);
+
+watchEffect(async () => {
+  if (
+    bottom.value &&
+    toBottom.value &&
+    pageInfo.value.total !== blogList.value.length
+  ) {
+    if (activeType.value === "content") await getBlogList();
+    else getLikeList();
+  }
+});
 
 const userMsg = computed(() => useUserInfoStore().userInfo);
 
@@ -42,8 +65,8 @@ const getBlogList = async () => {
       pageNo: pageInfo.value.pageNo++,
       pageSize: pageInfo.value.pageSize
     });
-    console.log("res", res);
-    blogList.value.push(...res);
+    blogList.value.push(...res.list);
+    pageInfo.value.total = res.total;
   } catch (error) {
     console.log("error", error);
   }
@@ -54,10 +77,42 @@ const requestBlogList = () => {
   if (activeType.value === "like") getLikeList();
   else getBlogList();
 };
-const changeLikeState = (val: BlogMsg) => {
-  const temp = blogList.value.find(ele => ele.id === val.id);
-  if (temp) temp.likeStatus = temp.likeStatus === 0 ? 1 : 0;
-  console.log(">>>>>改变喜欢状态...", temp?.likeStatus);
+const changeLikeState = async (temp: BlogMsg) => {
+  // const temp = blogList.value.find(ele => ele.id === val.id);
+  // if (temp) temp.likeStatus = temp.likeStatus === 0 ? 1 : 0;
+  // console.log(">>>>>val", val);
+  // temp.likeStatus = temp.likeStatus === 0 ? 1 : 0;
+  // console.log(">>>>>改变喜欢状态...", temp?.likeStatus);
+  // 点赞，改不喜欢为喜欢
+  if (temp.likeStatus === 1) {
+    try {
+      await changeLikeStatusApi({
+        articleId: temp.id,
+        userId: userMsg.value.id,
+        likeStatus: 0
+      });
+      temp.likeCount--;
+      temp.likeStatus = 0;
+    } catch (error: any) {
+      showNotify({ message: error.message, type: "warning" });
+    }
+  } else {
+    console.log(">>>>", temp);
+    try {
+      await changeLikeStatusApi({
+        articleId: temp.id,
+        userId: userMsg.value.id,
+        likeStatus: 1
+      });
+      temp.likeCount++;
+      temp.likeStatus = 1;
+    } catch (error: any) {
+      showNotify({ message: error.message, type: "warning" });
+
+      // showNotify({ message: error, type: "warning" });
+      console.log("error", error);
+    }
+  }
 };
 const skipBlogDetail = (id: string) => {
   router.push({
@@ -70,7 +125,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div class="blogList">
+  <div class="blogList" ref="el">
     <van-tabs
       v-model:active="activeType"
       class="blogList-head"
@@ -86,19 +141,26 @@ onMounted(() => {
         :key="item.id"
         @click="skipBlogDetail(item.id)"
       >
-        <img src="@/assets/image/blog_cover.jpg" class="cover-img" />
+        <img :src="item.coverImg" class="cover-img" />
         <div>
           <div class="mb-8px">{{ item.title }}</div>
           <div class="flex" style="justify-content: space-between">
             <div class="flex items-center gap-[8px]">
-              <img :src="item.coverImg" class="w-[24px] h-[24px]" />
+              <img
+                :src="item.userAvatar"
+                style="border-radius: 100%"
+                class="w-[24px] h-[24px]"
+              />
               <span>{{ item.authorName }}</span>
             </div>
-            <div style="color: #999" class="flex gap-[8px] items-center">
+            <div
+              style="color: #999"
+              class="flex gap-[8px] items-center"
+              @click.stop="changeLikeState(item)"
+            >
               <svg-icon
                 name="like"
                 :class="{ 'active-like': item.likeStatus === 1 }"
-                @click.stop="changeLikeState(item)"
               />
               <span> {{ item.likeCount }}</span>
             </div>
@@ -106,11 +168,20 @@ onMounted(() => {
         </div>
       </div>
     </div>
+    <van-empty v-if="!blogList.length" description="暂无数据~" />
+    <p
+      v-else-if="blogList.length >= pageInfo.total"
+      style="color: #999; text-align: center"
+    >
+      到底了~
+    </p>
   </div>
 </template>
 <style lang="less" scoped>
 .blogList {
   width: 100%;
+  max-height: calc(100% - 180px);
+  overflow: auto;
   padding: 12px;
   box-sizing: border-box;
   border-radius: 8px;
@@ -128,6 +199,7 @@ onMounted(() => {
     &-item {
       position: relative;
       margin-bottom: 8px;
+      break-inside: avoid;
       .cover-img {
         width: 100%;
         min-height: 180px;

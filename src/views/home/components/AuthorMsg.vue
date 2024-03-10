@@ -28,10 +28,6 @@ const userMsg = computed(() => userStore.userInfo);
       <div class="author-msg-title">{{ userMsg.fanNum }}</div>
       <div class="author-msg-text">粉丝</div>
     </div>
-    <div>
-      <div class="author-msg-title">{{ userMsg.likeNum }}</div>
-      <div class="author-msg-text">收获的喜欢</div>
-    </div>
   </div>
 </template>
 <style lang="less" scoped>

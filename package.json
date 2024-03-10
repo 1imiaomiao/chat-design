@@ -24,7 +24,8 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@vueuse/core": "^10.8.0",
+    "@vueuse/components": "^10.9.0",
+    "@vueuse/core": "^10.9.0",
     "axios": "^1.5.1",
     "dayjs": "^1.11.10",
     "md5": "^2.3.0",

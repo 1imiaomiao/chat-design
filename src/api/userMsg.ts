@@ -33,6 +33,7 @@ export interface BlogMsg {
   authorId?: string;
   authorName?: string;
   likeStatus: number;
+  userAvatar: string;
 }
 export function getBlogListApi(data: any): Promise<any> {
   return http.request({
@@ -46,5 +47,13 @@ export function getLikeListApi(data: any): Promise<any> {
     url: `${MOCK}/getLikeList`,
     method: "POST",
     params: data
+  });
+}
+
+export function changeLikeStatusApi(data: any): Promise<any> {
+  return http.request({
+    url: `${BASEURL}/article/changeLike`,
+    method: "post",
+    data
   });
 }
