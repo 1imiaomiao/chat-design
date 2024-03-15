@@ -21,7 +21,7 @@ const tabbarData = reactive([
     icon: "wap-home-o",
     title: "主页",
     to: {
-      name: "Mine"
+      name: "Home"
     }
   },
   {
@@ -42,7 +42,7 @@ const tabbarData = reactive([
     icon: "user-o",
     title: "我的",
     to: {
-      name: "Home"
+      name: "Mine"
     }
   }
 ]);

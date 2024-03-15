@@ -32,7 +32,10 @@ export interface TalkDetail {
   coverImg: string;
   createdAt: string | Date;
   likeStatus: number;
+  talkCount: number;
   id: string;
+  replayUser: { username: string; userId: string };
+  sonComment?: TalkDetail[];
 }
 export function getBlogTalkDetailApi(data?: any): Promise<any> {
   return http.request({
@@ -63,5 +66,12 @@ export function createBlogApi(data: any) {
     headers: {
       "Content-Type": "multipart/form-data"
     }
+  });
+}
+export function changeTalkLikeStatus(data?: any): Promise<any> {
+  return http.request({
+    url: `${BASEURL}/comment/changeLike`,
+    data,
+    method: "Post"
   });
 }

@@ -37,8 +37,9 @@ watchEffect(async () => {
     toBottom.value &&
     pageInfo.value.total !== blogList.value.length
   ) {
-    if (activeType.value === "content") await getBlogList();
-    else getLikeList();
+    getBlogList();
+    // if (activeType.value === "content") await getBlogList();
+    // else getLikeList();
   }
 });
 
@@ -173,7 +174,7 @@ onMounted(() => {
 <style lang="less" scoped>
 .blogList {
   width: 100%;
-  max-height: calc(100% - 180px);
+  max-height: calc(100vh - 60px);
   overflow: auto;
   padding: 12px;
   box-sizing: border-box;

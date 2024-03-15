@@ -1,13 +1,13 @@
 import Layout from "@/layout/index.vue";
 import type { RouteRecordRaw } from "vue-router";
-import Mine from "@/views/mine/index.vue";
+import Home from "@/views/home/index.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "root",
     component: Layout,
-    redirect: { name: "Mine" },
+    redirect: { name: "Home" },
     children: [
       {
         path: "login",
@@ -18,9 +18,9 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: "mine",
-        name: "Mine",
-        component: Mine,
+        path: "home",
+        name: "Home",
+        component: Home,
         meta: {
           title: "主页"
         }
@@ -43,9 +43,9 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: "home",
-        name: "Home",
-        component: () => import("@/views/home/index.vue"),
+        path: "mine",
+        name: "Mine",
+        component: () => import("@/views/mine/index.vue"),
         meta: {
           title: "我的",
           noCache: true

@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from "vue";
 import type { BlogDetail } from "@/api/blogAbout";
 import { getBlogDetailApi } from "@/api/blogAbout";
+import { changeLikeStatusApi } from "@/api/userMsg";
 import { useRouter } from "vue-router";
 import { showNotify } from "vant";
 import { useUserInfoStore } from "@/store/modules/userInfo";
@@ -39,11 +40,21 @@ const getBlogDetail = async () => {
     console.log(error, "err...");
   }
 };
-const handleClikeLike = () => {
+const handleClikeLike = async () => {
   if (blogDetail.value.likeStatus === 1) {
+    await changeLikeStatusApi({
+      articleId: props.id,
+      userId: userInfo.value.id,
+      likeStatus: 0
+    });
     blogDetail.value.likeStatus = 0;
     blogDetail.value.likeCount--;
   } else {
+    await changeLikeStatusApi({
+      articleId: props.id,
+      userId: userInfo.value.id,
+      likeStatus: 1
+    });
     blogDetail.value.likeStatus = 1;
     blogDetail.value.likeCount++;
   }
