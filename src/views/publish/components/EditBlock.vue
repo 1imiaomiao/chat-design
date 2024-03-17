@@ -38,7 +38,7 @@ const handleCreateArticle = async () => {
     formData.append("content", blogMsg.value.content);
     formData.append("userId", userInfo.value.id);
     await createBlogApi(formData);
-    showNotify({ message: "发布成功！" });
+    showNotify({ message: "发布成功！", type: "primary" });
     router.back();
   } catch (error) {
     console.log("error", error);

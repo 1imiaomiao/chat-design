@@ -1,6 +1,4 @@
 <script setup lang="ts" name="Mine">
-import { getUserMsgApi } from "@/api/userMsg";
-import type { UserMsg } from "@/api/userMsg";
 import { computed, onMounted, ref } from "vue";
 import AuthorMsg from "./components/AuthorMsg.vue";
 import BlogList from "./components/BlogList.vue";

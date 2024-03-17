@@ -2,17 +2,17 @@ import { http } from "@/utils/http";
 const BASEURL = "http://localhost:9000/v1/admin";
 
 const MOCK = "https://mock.apifox.com/m1/4017690-0-default";
-export interface UserMsg {
-  userId: string;
-  userName: string;
-  email: string;
-  avatar: string;
-  blogNum: number;
-  getLikeNum: number;
-  fanNum: number;
-  attentionNum: number;
-  commentNum: number;
-}
+// export interface UserMsg {
+//   userId: string;
+//   userName: string;
+//   email: string;
+//   avatar: string;
+//   blogNum: number;
+//   getLikeNum: number;
+//   fanNum: number;
+//   attentionNum: number;
+//   commentNum: number;
+// }
 export function getUserMsgApi(params?: object): Promise<any> {
   return http.request({
     url: `${MOCK}/getUserMsg`,
@@ -55,5 +55,31 @@ export function changeLikeStatusApi(data: any): Promise<any> {
     url: `${BASEURL}/article/changeLike`,
     method: "post",
     data
+  });
+}
+export interface UserMsg {
+  id: string;
+  createdAt?: Date;
+  email: string;
+  introduce: string;
+  username: string;
+  password?: string;
+  coverImg: string | File;
+}
+export function queryUserMsg(data: any): Promise<any> {
+  return http.request({
+    url: `${BASEURL}/user/query`,
+    method: "post",
+    data
+  });
+}
+export function updateUserMsg(data: any): Promise<any> {
+  return http.request({
+    url: `${BASEURL}/user/update`,
+    method: "post",
+    data,
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
   });
 }

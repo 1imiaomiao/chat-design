@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from "vue";
 import { useUserInfoStore } from "@/store/modules/userInfo";
+import { useRouter } from "vue-router";
 
 const userStore = useUserInfoStore();
-// const userMsg = computed(()=>useUserInfoStore.useInfo)
-// import type { UserMsg } from "@/api/userMsg";
-// interface Props {
-//   userMsg: UserMsg;
-// }
-// const props = defineProps<Props>();
+const router = useRouter();
 const userMsg = computed(() => userStore.userInfo);
+
+const handleSkipSetting = () => {
+  router.push("Setting");
+};
 </script>
 <template>
-  <div class="author-head">
+  <div class="author-head" @click="handleSkipSetting">
     <img :src="userMsg.coverImg" class="author-head-img" />
     <div>
       <div class="author-head-title">{{ userMsg.username }}</div>

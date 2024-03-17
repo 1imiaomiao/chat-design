@@ -59,6 +59,15 @@ const routes: Array<RouteRecordRaw> = [
           title: "博客详情",
           noCache: true
         }
+      },
+      {
+        path: "setting",
+        name: "Setting",
+        component: () => import("@/views/setting/index.vue"),
+        meta: {
+          title: "设置",
+          noCache: true
+        }
       }
     ]
   }
