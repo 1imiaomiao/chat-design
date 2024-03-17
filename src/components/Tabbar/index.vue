@@ -25,14 +25,14 @@ const tabbarData = reactive([
     }
   },
   {
-    icon: "eye",
-    title: "",
+    icon: "add",
+    title: "发布",
     to: {
       name: "Publish"
     }
   },
   {
-    icon: "user-o",
+    icon: "chat-o",
     title: "私信",
     to: {
       name: "Message"
