@@ -3,13 +3,22 @@ import { ref, reactive, computed, onMounted } from "vue";
 import type { ChatMsg } from "@/api/chat";
 import { queryList } from "@/api/chat";
 import { showNotify } from "vant";
-// import useUserInfoStore
 import { useUserInfoStore } from "@/store/modules/userInfo";
 import dayjs from "dayjs";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const chatList = ref<ChatMsg[]>([]);
 
 const userInfo = computed(() => useUserInfoStore().userInfo);
+const skipRecord = (roomId: string) => {
+  router.push({
+    name: "Chat",
+    query: {
+      roomId: roomId
+    }
+  });
+};
 const getChatList = async () => {
   try {
     const res = await queryList({ receiverId: userInfo.value.id });
@@ -24,7 +33,12 @@ onMounted(() => {
 </script>
 <template>
   <div class="w-100 mt-[20px]">
-    <div class="talk" v-for="(chat, key) in chatList" :key="key">
+    <div
+      class="talk"
+      v-for="(chat, key) in chatList"
+      @click="skipRecord(chat.id)"
+      :key="key"
+    >
       <img :src="chat.coverImg" />
       <div style="flex: 1">
         <div class="chatMsgContainer">

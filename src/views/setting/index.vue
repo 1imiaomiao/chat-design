@@ -95,6 +95,7 @@ onMounted(async () => {
         name="username"
         label="用户名"
         placeholder="用户名"
+        :disabled="true"
         :rules="[{ required: true, message: '请填写' }]"
       />
       <van-field

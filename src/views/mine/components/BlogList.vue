@@ -198,6 +198,7 @@ onMounted(() => {
         width: 100%;
         min-height: 180px;
         max-height: 240px;
+        object-fit: cover;
         border-radius: 8px;
       }
       .active-like {

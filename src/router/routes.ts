@@ -43,6 +43,14 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "chat",
+        name: "Chat",
+        component: () => import("@/views/message/chatDetail/index.vue"),
+        meta: {
+          noCache: true
+        }
+      },
+      {
         path: "mine",
         name: "Mine",
         component: () => import("@/views/mine/index.vue"),

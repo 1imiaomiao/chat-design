@@ -199,6 +199,7 @@ onMounted(() => {
         min-height: 180px;
         max-height: 240px;
         border-radius: 8px;
+        object-fit: cover;
       }
       .active-like {
         color: red;

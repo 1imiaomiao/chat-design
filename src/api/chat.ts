@@ -16,3 +16,18 @@ export function queryList(data: any) {
     data
   });
 }
+export interface ChatMsg {
+  id: string;
+  receiverId: string;
+  content: string;
+  senderId: string;
+  createdAt: Date | string;
+  roomId: string;
+}
+export function queryChatDetail(data: Object) {
+  return http.request<any>({
+    url: `${BASEURL}/chat/query`,
+    method: "POST",
+    data
+  });
+}

@@ -110,6 +110,7 @@ onMounted(() => {
   &-cover {
     width: 100%;
     max-height: 320px;
+    object-fit: cover;
     border-radius: 8px;
   }
   &-header {
