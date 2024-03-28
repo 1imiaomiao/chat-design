@@ -1,5 +1,5 @@
 import { http } from "@/utils/http";
-const BASEURL = "http://localhost:9000/v1/admin";
+// const BASEURL = "https://0637.top/";
 
 const MOCK = "https://mock.apifox.com/m1/4017690-0-default";
 // export interface UserMsg {
@@ -37,14 +37,14 @@ export interface BlogMsg {
 }
 export function getBlogListApi(data: any): Promise<any> {
   return http.request({
-    url: `${BASEURL}/article/list`,
+    url: `/article/list`,
     method: "POST",
     data
   });
 }
 export function getLikeListApi(data: any): Promise<any> {
   return http.request({
-    url: `${BASEURL}/article/likeList`,
+    url: `/article/likeList`,
     method: "POST",
     data
   });
@@ -52,7 +52,7 @@ export function getLikeListApi(data: any): Promise<any> {
 
 export function changeLikeStatusApi(data: any): Promise<any> {
   return http.request({
-    url: `${BASEURL}/article/changeLike`,
+    url: `/article/changeLike`,
     method: "post",
     data
   });
@@ -68,14 +68,14 @@ export interface UserMsg {
 }
 export function queryUserMsg(data: any): Promise<any> {
   return http.request({
-    url: `${BASEURL}/user/query`,
+    url: `/user/query`,
     method: "post",
     data
   });
 }
 export function updateUserMsg(data: any): Promise<any> {
   return http.request({
-    url: `${BASEURL}/user/update`,
+    url: `/user/update`,
     method: "post",
     data,
     headers: {

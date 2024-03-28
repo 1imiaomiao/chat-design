@@ -3,13 +3,22 @@ import { computed, onMounted, ref } from "vue";
 import AuthorMsg from "./components/AuthorMsg.vue";
 import BlogList from "./components/BlogList.vue";
 import { useUserInfoStore } from "@/store/modules/userInfo";
+import { useRoute } from "vue-router";
 
+const route = useRoute();
 const userMsg = computed(() => useUserInfoStore().userInfo);
+const userId = ref(route.params.id);
 </script>
 <template>
   <div class="home">
     <AuthorMsg />
-    <BlogList :userId="userMsg.id" />
+    <div class="home-btns" v-if="userId">
+      <van-button>
+        <svg-icon/>
+      </van-button>
+      <van-button>私信</van-button>
+    </div>
+    <BlogList :userId="userId || userMsg.id" />
   </div>
 </template>
 <style lang="less" scoped>

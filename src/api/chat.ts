@@ -1,4 +1,4 @@
-const BASEURL = "http://localhost:9000/v1/admin";
+// const BASEURL = "https://0637.top/";
 import { http } from "@/utils/http";
 
 export interface ChatMsg {
@@ -11,7 +11,7 @@ export interface ChatMsg {
 }
 export function queryList(data: any) {
   return http.request<any>({
-    url: `${BASEURL}/chat/queryList`,
+    url: `/chat/queryList`,
     method: "POST",
     data
   });
@@ -26,7 +26,7 @@ export interface ChatMsg {
 }
 export function queryChatDetail(data: Object) {
   return http.request<any>({
-    url: `${BASEURL}/chat/query`,
+    url: `/chat/query`,
     method: "POST",
     data
   });
