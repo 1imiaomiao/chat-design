@@ -2,20 +2,57 @@
 import { ref, reactive, computed } from "vue";
 import { useUserInfoStore } from "@/store/modules/userInfo";
 import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 
 const userStore = useUserInfoStore();
 const router = useRouter();
+const route = useRoute();
 const userMsg = computed(() => userStore.userInfo);
+const userId = computed(() => route.query.id);
 
 const handleSkipSetting = () => {
   router.push("Setting");
 };
+const skipChat = () => {
+  // console.log("跳转到聊天室");
+  const roomId =
+    userId.value!.slice(-5) > userMsg.value.id.slice(-5)
+      ? userId.value!.slice(-5) + userMsg.value.id.slice(-5)
+      : userMsg.value.id.slice(-5) + userId.value!.slice(-5);
+  console.log("!!!!!", roomId);
+  router.push({
+    name: "Chat",
+    query: {
+      roomId: roomId
+    }
+  });
+};
 </script>
 <template>
-  <div class="author-head" @click="handleSkipSetting">
-    <img :src="userMsg.coverImg" class="author-head-img" />
-    <div>
-      <div class="author-head-title">{{ userMsg.username }}</div>
+  <div class="author-head">
+    <img
+      :src="userMsg.coverImg"
+      class="author-head-img"
+      @click="handleSkipSetting"
+    />
+    <div class="flex-[1]">
+      <div class="author-head-title">
+        <div>{{ userMsg.username }}</div>
+        <div class="flex gap-[8px]" v-if="userId && userId != userMsg.id">
+          <van-button round type="primary" color="#478BFF" style="height: 32px">
+            <span>关注</span>
+          </van-button>
+          <van-button
+            round
+            type="success"
+            color="#B0B1B2"
+            style="height: 32px"
+            @click="skipChat"
+          >
+            <svg-icon name="send" />
+          </van-button>
+        </div>
+      </div>
       <div class="author-head-text">ID:{{ userMsg.id }}</div>
     </div>
   </div>
@@ -40,8 +77,12 @@ const handleSkipSetting = () => {
     border-radius: 100%;
   }
   &-title {
+    display: flex;
+    justify-content: space-between;
+    // .text {
     font-weight: 600;
     font-size: 18px;
+    // }
   }
   &-text {
     font-size: 14px;

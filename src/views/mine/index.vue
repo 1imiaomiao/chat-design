@@ -7,17 +7,11 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 const userMsg = computed(() => useUserInfoStore().userInfo);
-const userId = ref(route.params.id);
+const userId = ref(route.query.id);
 </script>
 <template>
   <div class="home">
     <AuthorMsg />
-    <div class="home-btns" v-if="userId">
-      <van-button>
-        <svg-icon/>
-      </van-button>
-      <van-button>私信</van-button>
-    </div>
     <BlogList :userId="userId || userMsg.id" />
   </div>
 </template>
@@ -31,5 +25,24 @@ const userId = ref(route.params.id);
   background: #f4f4f7;
   gap: 12px;
   overflow: hidden;
+  // .home-btns {
+  //   width: 100%;
+  //   display: flex;
+  //   padding: 8px 12px;
+  //   border-radius: 8px;
+  //   background: #fff;
+  //   gap: 8px;
+  //   button {
+  //     flex: 1;
+  //   }
+  //   :deep(.van-button__text) {
+  //     width: 100%;
+  //     display: flex;
+  //     justify-content: center;
+  //     align-content: center;
+  //     font-size: 16px;
+  //     gap: 8px;
+  //   }
+  // }
 }
 </style>

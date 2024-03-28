@@ -62,9 +62,11 @@ const handleClikeLike = async () => {
 const skipRouterBack = () => {
   router.back();
 };
+
 const skipPersonHome = () => {
+  console.log("!!!!!blogDetail.value", blogDetail.value.authorId);
   router.push({
-    path: "/home",
+    path: "/mine",
     query: { id: blogDetail.value.authorId }
   });
 };
