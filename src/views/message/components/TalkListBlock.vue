@@ -11,11 +11,12 @@ const router = useRouter();
 const chatList = ref<ChatMsg[]>([]);
 
 const userInfo = computed(() => useUserInfoStore().userInfo);
-const skipRecord = (roomId: string) => {
+const skipRecord = (roomId: string, id: string) => {
   router.push({
     name: "Chat",
     query: {
-      roomId: roomId
+      roomId: roomId,
+      userId: id
     }
   });
 };
@@ -36,7 +37,12 @@ onMounted(() => {
     <div
       class="talk"
       v-for="(chat, key) in chatList"
-      @click="skipRecord(chat.id)"
+      @click="
+        skipRecord(
+          chat.id,
+          chat.senderId === userInfo.id ? chat.receiverId : chat.senderId
+        )
+      "
       :key="key"
     >
       <img :src="chat.coverImg" />

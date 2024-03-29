@@ -66,7 +66,8 @@ export default defineConfig(({ mode }) => {
       // doc: https://github.com/pengzhanbo/vite-plugin-mock-dev-server
       proxy: {
         "/admin": {
-          target: "https://0637.top/",
+          // target: "https://0637.top/", // pre
+          target: "http://localhost:3000", // local
           changeOrigin: true
           // pathRewrite: {
           // "^/api": "" // 如果后端接口没有/api前缀，可以将其删除

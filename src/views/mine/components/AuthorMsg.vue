@@ -1,32 +1,49 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, onMounted } from "vue";
 import { useUserInfoStore } from "@/store/modules/userInfo";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
+import { queryUserMsg } from "@/api/userMsg";
 
 const userStore = useUserInfoStore();
 const router = useRouter();
 const route = useRoute();
-const userMsg = computed(() => userStore.userInfo);
-const userId = computed(() => route.query.id);
 
+const userMsg = ref(userStore.userInfo);
+// const userId = computed(() => route.query.id);
+const storeInfoMsg = computed(() => userStore.userInfo);
+
+const initUserMsg = async () => {
+  if (!route.query.id) return;
+  try {
+    const res = await queryUserMsg({ userId: route.query.id });
+    userMsg.value = res;
+  } catch (error) {
+    console.log(error);
+  }
+};
 const handleSkipSetting = () => {
   router.push("Setting");
 };
 const skipChat = () => {
-  // console.log("跳转到聊天室");
+  const receiverId = storeInfoMsg.value.id;
+  const senderId = userMsg.value.id;
   const roomId =
-    userId.value!.slice(-5) > userMsg.value.id.slice(-5)
-      ? userId.value!.slice(-5) + userMsg.value.id.slice(-5)
-      : userMsg.value.id.slice(-5) + userId.value!.slice(-5);
+    receiverId.slice(-5) > senderId.slice(-5)
+      ? receiverId.slice(-5) + senderId.slice(-5)
+      : senderId.slice(-5) + receiverId.slice(-5);
   console.log("!!!!!", roomId);
   router.push({
     name: "Chat",
     query: {
-      roomId: roomId
+      roomId: roomId,
+      userId: userMsg.value.id
     }
   });
 };
+onMounted(() => {
+  initUserMsg();
+});
 </script>
 <template>
   <div class="author-head">
@@ -38,7 +55,10 @@ const skipChat = () => {
     <div class="flex-[1]">
       <div class="author-head-title">
         <div>{{ userMsg.username }}</div>
-        <div class="flex gap-[8px]" v-if="userId && userId != userMsg.id">
+        <div
+          class="flex gap-[8px]"
+          v-if="route.query.id && route.query.id != storeInfoMsg?.id"
+        >
           <van-button round type="primary" color="#478BFF" style="height: 32px">
             <span>关注</span>
           </van-button>

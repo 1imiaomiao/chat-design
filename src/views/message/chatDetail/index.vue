@@ -1,31 +1,74 @@
 <script setup lang="ts" name="Chat">
-import { ref, reactive, onMounted, compile, computed } from "vue";
-import { queryChatDetail } from "@/api/chat";
+import { ref, reactive, onMounted, computed } from "vue";
+import { queryUserMsg } from "@/api/userMsg";
 import type { ChatMsg } from "@/api/chat";
 import { useRoute } from "vue-router";
+import { sendChatMsgApi, queryChatDetail } from "@/api/chat";
 import { useUserInfoStore } from "@/store/modules/userInfo";
 
 const route = useRoute();
 const chatList = ref<ChatMsg[]>([]);
-const userInfo = computed(() => useUserInfoStore().userInfo);
+const chatVal = ref("");
+const chatObjMsg = ref({
+  id: "",
+  coverImg: "",
+  username: ""
+});
 
-const quertChatRecord = async () => {
+const userInfo = computed(() => useUserInfoStore().userInfo);
+const roomId = computed(() => route.query.roomId);
+
+const initChatObjMsg = async () => {
+  chatObjMsg.value.id = route.query.userId as string;
   try {
-    const res = await queryChatDetail({ roomId: route.query.roomId as string });
-    chatList.value = res.comments;
-    console.log(">>>>>", chatList.value);
+    const res = await queryUserMsg({ userId: route.query.userId });
+    const { username, coverImg } = res;
+    chatObjMsg.value = { ...chatObjMsg.value, username, coverImg };
   } catch (error) {
     console.log("error", error);
   }
 };
-onMounted(() => {
-  quertChatRecord();
-  // console.log(route.query.roomId);
+const quertChatRecord = async () => {
+  try {
+    const res = await queryChatDetail({ roomId: roomId.value });
+    chatList.value = res.comments;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+const handleSendMsg = async () => {
+  try {
+    const senderId = userInfo.value.id;
+    const receiverId = chatObjMsg.value.id;
+    const id = await sendChatMsgApi({
+      receiverId,
+      senderId,
+      content: chatVal.value
+    });
+    chatList.value.push({
+      id: id as string,
+      receiverId: receiverId as string,
+      content: chatVal.value,
+      senderId: senderId as string,
+      createdAt: new Date(),
+      roomId: roomId.value as string
+    });
+    chatVal.value = "";
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+onMounted(async () => {
+  await quertChatRecord();
+  await initChatObjMsg();
 });
 </script>
 <template>
   <div class="message">
-    <div class="messgae-header"></div>
+    <div class="message-header">
+      <img :src="chatObjMsg.coverImg" class="coverImg" />
+      <span>{{ chatObjMsg.username }}</span>
+    </div>
     <div class="message-list">
       <div
         v-for="(item, index) in chatList"
@@ -34,14 +77,38 @@ onMounted(() => {
         :data-type="userInfo.id === item.senderId ? 'me' : 'other'"
       >
         <div class="chatItem-content">
-          <img :src="userInfo.coverImg" />
+          <img
+            :src="
+              userInfo.id === item.senderId
+                ? userInfo.coverImg
+                : chatObjMsg.coverImg
+            "
+          />
           <span class="text">{{ item.content }}</span>
         </div>
       </div>
     </div>
+    <div class="message-edit">
+      <van-field
+        v-model="chatVal"
+        ref="editRef"
+        placeholder="输入.."
+        class="talk-edit-input"
+        @keydown.enter="handleSendMsg"
+      >
+        <template #right-icon>
+          <svg-icon class="icon" name="edit" />
+        </template>
+      </van-field>
+    </div>
   </div>
 </template>
 <style lang="less" scoped>
+.coverImg {
+  width: 32px;
+  height: 32px;
+  border-radius: 100%;
+}
 .message {
   width: 100%;
   height: 100vh;
@@ -49,8 +116,13 @@ onMounted(() => {
   flex-direction: column;
   .message-header {
     width: 100%;
-    height: 30px;
+    padding: 8px 16px;
+    box-sizing: border-box;
     background: #fff;
+    align-items: end;
+    gap: 12px;
+    display: flex;
+    color: #999;
   }
   .message-list {
     width: 100%;
@@ -61,6 +133,26 @@ onMounted(() => {
     flex-direction: column;
     padding: 12px 8px;
     box-sizing: border-box;
+  }
+  &-edit {
+    position: sticky;
+    bottom: 70px;
+    opacity: 1;
+    box-sizing: border-box;
+    padding-inline: 16px;
+    padding-bottom: 8px;
+    left: 0px;
+    width: 100%;
+    padding: 12px;
+    z-index: 1;
+    .icon {
+      color: #999;
+    }
+    &-input {
+      width: 100%;
+      border: 1px solid #999;
+      border-radius: 8px;
+    }
   }
   .chatItem {
     margin-block: 8px;

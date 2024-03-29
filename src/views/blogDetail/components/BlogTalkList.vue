@@ -7,7 +7,6 @@ import {
   changeTalkLikeStatus
 } from "@/api/blogAbout";
 import { useUserInfoStore } from "@/store/modules/userInfo";
-import { showNotify } from "vant";
 
 const initPageInfo = {
   pageNo: 0,

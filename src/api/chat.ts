@@ -1,14 +1,14 @@
 // const BASEURL = "https://0637.top/";
 import { http } from "@/utils/http";
 
-export interface ChatMsg {
-  createdAt: string | Date;
-  id: string;
-  senderId: string;
-  coverImg: string;
-  content: string;
-  username: string;
-}
+// export interface ChatMsg {
+//   createdAt: string | Date;
+//   id: string;
+//   senderId: string;
+//   coverImg: string;
+//   content: string;
+//   username: string;
+// }
 export function queryList(data: any) {
   return http.request<any>({
     url: `/chat/queryList`,
@@ -23,10 +23,19 @@ export interface ChatMsg {
   senderId: string;
   createdAt: Date | string;
   roomId: string;
+  coverImg?: string;
+  username?: string;
 }
 export function queryChatDetail(data: Object) {
   return http.request<any>({
     url: `/chat/query`,
+    method: "POST",
+    data
+  });
+}
+export function sendChatMsgApi(data: Object) {
+  return http.request({
+    url: "/chat/create",
     method: "POST",
     data
   });
