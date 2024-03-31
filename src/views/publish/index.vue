@@ -3,7 +3,6 @@ import EditBlock from "./components/EditBlock.vue";
 import { ref } from "vue";
 const editRef = ref();
 const onSubmit = () => {
-  console.log(">>>>>");
   editRef.value.handleCreateArticle();
 };
 </script>

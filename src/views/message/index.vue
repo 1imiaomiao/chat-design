@@ -1,36 +1,50 @@
 <script setup lang="ts" name="Message">
 import TalkListBlock from "./components/TalkListBlock.vue";
+import MessageModal from "./components/MessageModal.vue";
+import { useMessageInfoStore } from "@/store/modules/message";
+import { computed } from "vue";
+
+const messageStore = useMessageInfoStore();
+
+const modalRef = ref();
+const likeCount = computed(() => messageStore.likeMessageCount);
+const commnetCount = computed(() => messageStore.commentMessageCount);
+
+const handleOpenModal = (val: "like" | "comment") => {
+  modalRef.value.initModal(val);
+};
 </script>
 
 <template>
   <div class="message">
     <div class="message-header">
-      <van-badge :content="undefined">
-        <div class="message-header-item" data-name="like">
-          <div class="svgContainer">
+      <div class="message-header-item" data-name="like">
+        <van-badge :content="likeCount || undefined">
+          <div class="svgContainer" @click="handleOpenModal('like')">
             <svg-icon name="like" class="icon" />
           </div>
-          <div class="label">喜欢</div>
-        </div>
-      </van-badge>
-      <van-badge :content="undefined">
-        <div class="message-header-item" data-name="other">
+        </van-badge>
+        <div class="label">喜欢</div>
+      </div>
+      <div class="message-header-item" data-name="other">
+        <van-badge :content="undefined">
           <div class="svgContainer">
             <svg-icon name="notify" class="icon" />
           </div>
-          <div class="label">系统</div>
-        </div>
-      </van-badge>
-      <van-badge :content="undefined">
-        <div class="message-header-item" data-name="talk">
-          <div class="svgContainer">
+        </van-badge>
+        <div class="label">系统</div>
+      </div>
+      <div class="message-header-item" data-name="talk">
+        <van-badge :content="commnetCount || undefined">
+          <div class="svgContainer" @click="handleOpenModal('comment')">
             <svg-icon name="talk" class="icon" />
           </div>
-          <div class="label">评论</div>
-        </div>
-      </van-badge>
+        </van-badge>
+        <div class="label">评论</div>
+      </div>
     </div>
     <TalkListBlock></TalkListBlock>
+    <MessageModal ref="modalRef" />
   </div>
 </template>
 <style scoped lang="less">

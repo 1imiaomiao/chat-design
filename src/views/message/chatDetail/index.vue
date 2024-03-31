@@ -93,7 +93,7 @@ onMounted(async () => {
         v-model="chatVal"
         ref="editRef"
         placeholder="输入.."
-        class="talk-edit-input"
+        class="message-edit-input"
         @keydown.enter="handleSendMsg"
       >
         <template #right-icon>
@@ -111,9 +111,10 @@ onMounted(async () => {
 }
 .message {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  background: #f4f4f7;
   .message-header {
     width: 100%;
     padding: 8px 16px;
@@ -128,7 +129,6 @@ onMounted(async () => {
     width: 100%;
     flex: 1;
     overflow: auto;
-    background: #f4f4f7;
     display: flex;
     flex-direction: column;
     padding: 12px 8px;
@@ -136,7 +136,7 @@ onMounted(async () => {
   }
   &-edit {
     position: sticky;
-    bottom: 70px;
+    bottom: 50px;
     opacity: 1;
     box-sizing: border-box;
     padding-inline: 16px;
@@ -149,9 +149,7 @@ onMounted(async () => {
       color: #999;
     }
     &-input {
-      width: 100%;
-      border: 1px solid #999;
-      border-radius: 8px;
+      border-radius: 12px;
     }
   }
   .chatItem {

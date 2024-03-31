@@ -100,7 +100,8 @@ const handleClickTalkLike = async (item: any) => {
     await changeTalkLikeStatus({
       userId: userInfo.value.id,
       talkId: item.id,
-      status: 0
+      status: 0,
+      commenterId: item.userId
     });
     item.likeStatus = 0;
     item.likeCount--;
@@ -173,7 +174,7 @@ onMounted(async () => {
             </div>
           </div>
           <div class="talk-list-content">
-            <div @click="handleWeakUpTalk(item.id, item.userId)">
+            <div @click.stop="handleWeakUpTalk(item.id, sonCommentItem.userId)">
               {{ sonCommentItem.content }}
             </div>
             <div class="talk-list-content-time">

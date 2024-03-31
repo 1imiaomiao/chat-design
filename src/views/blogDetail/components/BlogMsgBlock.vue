@@ -34,7 +34,6 @@ const getBlogDetail = async () => {
       browseId: userInfo.value.id
     });
     blogDetail.value = res;
-    console.log(">>>", res, blogDetail.value);
   } catch (error: any) {
     showNotify(error.message);
     console.log(error, "err...");
@@ -64,7 +63,6 @@ const skipRouterBack = () => {
 };
 
 const skipPersonHome = () => {
-  console.log("!!!!!blogDetail.value", blogDetail.value.authorId);
   router.push({
     path: "/mine",
     query: { id: blogDetail.value.authorId }

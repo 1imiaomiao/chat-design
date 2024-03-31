@@ -77,7 +77,6 @@ const requestBlogList = () => {
   // else getBlogList();
 };
 const changeLikeState = async (temp: BlogMsg) => {
-  console.log(">>>>", temp);
   if (temp.likeStatus === 1) {
     try {
       await changeLikeStatusApi({
@@ -91,7 +90,6 @@ const changeLikeState = async (temp: BlogMsg) => {
       showNotify({ message: error.message, type: "warning" });
     }
   } else {
-    console.log(">>>>", temp);
     try {
       await changeLikeStatusApi({
         articleId: temp.id,
@@ -110,7 +108,7 @@ const changeLikeState = async (temp: BlogMsg) => {
 };
 const skipBlogDetail = (id: string) => {
   router.push({
-    path: "/blogDetail",
+    name: "BlogDetail",
     query: { id }
   });
 };

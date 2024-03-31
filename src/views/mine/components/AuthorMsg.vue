@@ -32,7 +32,6 @@ const skipChat = () => {
     receiverId.slice(-5) > senderId.slice(-5)
       ? receiverId.slice(-5) + senderId.slice(-5)
       : senderId.slice(-5) + receiverId.slice(-5);
-  console.log("!!!!!", roomId);
   router.push({
     name: "Chat",
     query: {

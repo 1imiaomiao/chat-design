@@ -62,7 +62,7 @@ const handleSubmit = async () => {
     useUserInfoStore().changeUserInfo({ ...userInfo, ...res });
     skipRouter();
   } catch (error: any) {
-    console.log("!!!", error.message);
+    console.log("error", error.message);
     showNotify({ message: error.message as string, type: "warning" });
   }
 };
