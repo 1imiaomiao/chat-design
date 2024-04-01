@@ -1,16 +1,21 @@
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from "vue";
+import { ref, reactive, computed, onMounted, watch } from "vue";
 import type { ChatMsg } from "@/api/chat";
 import { queryList } from "@/api/chat";
 import { showNotify } from "vant";
 import { useUserInfoStore } from "@/store/modules/userInfo";
 import dayjs from "dayjs";
 import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
+import { useMessageInfoStore } from "@/store/modules/message";
 
 const router = useRouter();
-const chatList = ref<ChatMsg[]>([]);
+const route = useRoute();
+const chatList = ref<(ChatMsg & { isActive?: 1 })[]>([]);
 
 const userInfo = computed(() => useUserInfoStore().userInfo);
+const newChatMessage = computed(() => useMessageInfoStore().chatMessage);
+
 const skipRecord = (roomId: string, id: string) => {
   router.push({
     name: "Chat",
@@ -20,6 +25,7 @@ const skipRecord = (roomId: string, id: string) => {
     }
   });
 };
+
 const getChatList = async () => {
   try {
     const res = await queryList({ receiverId: userInfo.value.id });
@@ -28,6 +34,18 @@ const getChatList = async () => {
     showNotify({ message: error.message });
   }
 };
+
+watch(
+  () => newChatMessage.value,
+  () => {
+    if (newChatMessage.value === null) return;
+    const { senderId } = newChatMessage.value;
+    const temp = chatList.value.find(item => item.senderId === senderId);
+    if (temp) temp.isActive = 1;
+    else chatList.value.unshift(newChatMessage.value as ChatMsg);
+  }
+);
+
 onMounted(() => {
   getChatList();
 });

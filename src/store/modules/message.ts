@@ -2,11 +2,15 @@
 import { defineStore } from "pinia";
 
 // 私信
-interface ChatMessage {
-  username: string;
+export interface ChatMessage {
+  id: string; //发言id
+  receiverId: string;
   content: string;
+  senderId: string;
+  createdAt: Date | string;
   roomId: string;
-  userId: string;
+  coverImg?: string;
+  username?: string;
 }
 export interface LikeMessage {
   username: string;
@@ -28,6 +32,7 @@ export interface CommentMessage {
 export const useMessageInfoStore = defineStore("message", {
   state: () => {
     return {
+      chatMessage: null as ChatMessage | null,
       likeMessageList: sessionStorage.getItem("LIKEMESSAGE")
         ? JSON.parse(sessionStorage.getItem("LIKEMESSAGE") as string)
         : ([] as LikeMessage[]),
@@ -77,6 +82,12 @@ export const useMessageInfoStore = defineStore("message", {
         "COMMENTCOUNT",
         JSON.stringify(this.commentMessageCount)
       );
+    },
+    acceptChatMessage(data: ChatMessage) {
+      this.chatMessage = data;
+    },
+    checkChatMessage() {
+      this.chatMessage = null;
     },
     checkLikeMessage() {
       this.likeMessageCount = 0;

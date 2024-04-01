@@ -19,9 +19,9 @@ const cachedViews = computed(() => {
 const showTabbar = computed(() =>
   exceptRouterName.indexOf(route.name as string) === -1 ? true : false
 );
-onMounted(async () => {
+onMounted(() => {
   console.log("项目 init....");
-  await initSocket();
+  initSocket();
   listeningAllMessage();
 });
 </script>

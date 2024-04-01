@@ -2,7 +2,8 @@ import { io } from "socket.io-client";
 import {
   useMessageInfoStore,
   type LikeMessage,
-  type CommentMessage
+  type CommentMessage,
+  type ChatMessage
 } from "@/store/modules/message";
 import { useUserInfoStore } from "@/store/modules/userInfo";
 const socket = io("http://localhost:3000");
@@ -43,6 +44,10 @@ export const useSocketServer = () => {
     socket.on("comment", (val: CommentMessage) => {
       console.log("评论....", val);
       useMessageInfoStore().acceptCommentMessage(val);
+    });
+    socket.on("chat", (val: ChatMessage) => {
+      console.log("私信");
+      useMessageInfoStore().acceptChatMessage(val);
     });
   };
   return { handleSubmitNewMessage, listeningAllMessage };
