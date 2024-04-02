@@ -11,11 +11,23 @@ import { useMessageInfoStore } from "@/store/modules/message";
 
 const router = useRouter();
 const route = useRoute();
-const chatList = ref<(ChatMsg & { isActive?: 1 })[]>([]);
+const chatList = ref<ChatMsg[]>([]);
 
 const userInfo = computed(() => useUserInfoStore().userInfo);
+const chatStatusMap = computed(() => useMessageInfoStore().chatStatusMap);
 const newChatMessage = computed(() => useMessageInfoStore().chatMessage);
 
+watch(
+  () => newChatMessage.value,
+  () => {
+    if (!newChatMessage.value) return;
+    const temp = chatList.value.find(
+      ele => ele.senderId === newChatMessage.value!.senderId
+    );
+    if (temp) temp.content = newChatMessage.value!.content;
+    else chatList.value.push(newChatMessage.value);
+  }
+);
 const skipRecord = (roomId: string, id: string) => {
   router.push({
     name: "Chat",
@@ -35,17 +47,6 @@ const getChatList = async () => {
   }
 };
 
-watch(
-  () => newChatMessage.value,
-  () => {
-    if (newChatMessage.value === null) return;
-    const { senderId } = newChatMessage.value;
-    const temp = chatList.value.find(item => item.senderId === senderId);
-    if (temp) temp.isActive = 1;
-    else chatList.value.unshift(newChatMessage.value as ChatMsg);
-  }
-);
-
 onMounted(() => {
   getChatList();
 });
@@ -63,8 +64,11 @@ onMounted(() => {
       "
       :key="key"
     >
-      <img :src="chat.coverImg" />
-      <div style="flex: 1">
+      <van-badge dot v-if="chatStatusMap.get(chat.senderId)">
+        <img :src="chat.coverImg" />
+      </van-badge>
+      <img :src="chat.coverImg" v-else />
+      <div style="flex: 1; margin-left: 12px">
         <div class="chatMsgContainer">
           <span>{{ chat.username }}</span>
           <span style="color: #999">{{
@@ -89,7 +93,6 @@ onMounted(() => {
     width: 36px;
     height: 36px;
     border-radius: 100%;
-    margin-right: 8px;
   }
   .chatMsgContainer {
     display: flex;

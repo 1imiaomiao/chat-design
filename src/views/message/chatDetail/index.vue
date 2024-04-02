@@ -1,10 +1,11 @@
 <script setup lang="ts" name="Chat">
-import { ref, reactive, onMounted, computed } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { queryUserMsg } from "@/api/userMsg";
 import type { ChatMsg } from "@/api/chat";
 import { useRoute } from "vue-router";
 import { sendChatMsgApi, queryChatDetail } from "@/api/chat";
 import { useUserInfoStore } from "@/store/modules/userInfo";
+import { useMessageInfoStore } from "@/store/modules/message";
 
 const route = useRoute();
 const chatList = ref<ChatMsg[]>([]);
@@ -17,6 +18,17 @@ const chatObjMsg = ref({
 
 const userInfo = computed(() => useUserInfoStore().userInfo);
 const roomId = computed(() => route.query.roomId);
+const newMessage = computed(() => useMessageInfoStore().chatMessage);
+
+watch(
+  () => newMessage.value,
+  () => {
+    if (!newMessage.value || newMessage.value.senderId !== route.query.userId)
+      return;
+    chatList.value.push(newMessage.value);
+    useMessageInfoStore().checkChatMessage(route.query.userId as string);
+  }
+);
 
 const initChatObjMsg = async () => {
   chatObjMsg.value.id = route.query.userId as string;
@@ -58,9 +70,11 @@ const handleSendMsg = async () => {
     console.log("error", error);
   }
 };
+
 onMounted(async () => {
   await quertChatRecord();
   await initChatObjMsg();
+  useMessageInfoStore().checkChatMessage(route.query.userId as string);
 });
 </script>
 <template>

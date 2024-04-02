@@ -39,7 +39,7 @@ export const useMessageInfoStore = defineStore("message", {
       commentMessageList: sessionStorage.getItem("COMMENTMESSAGE")
         ? JSON.parse(sessionStorage.getItem("COMMENTMESSAGE") as string)
         : ([] as CommentMessage[]),
-      chatMessageList: null as ChatMessage | null,
+      chatStatusMap: new Map() as Map<string | number, 1>,
       likeMessageCount: sessionStorage.getItem("LIKECOUNT")
         ? JSON.parse(sessionStorage.getItem("LIKECOUNT") as string)
         : 0,
@@ -85,9 +85,11 @@ export const useMessageInfoStore = defineStore("message", {
     },
     acceptChatMessage(data: ChatMessage) {
       this.chatMessage = data;
+      this.chatStatusMap.set(data.senderId, 1);
     },
-    checkChatMessage() {
-      this.chatMessage = null;
+    checkChatMessage(senderId: string) {
+      this.chatStatusMap.delete(senderId);
+      if (senderId === this.chatMessage?.senderId) this.chatMessage = null;
     },
     checkLikeMessage() {
       this.likeMessageCount = 0;
