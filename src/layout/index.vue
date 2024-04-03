@@ -3,11 +3,11 @@ import tabbar from "@/components/Tabbar/index.vue";
 import NavBar from "@/components/NavBar/index.vue";
 import { useCachedViewStoreHook } from "@/store/modules/cachedView";
 import { useDarkMode } from "@/hooks/useToggleDarkMode";
-import { initSocket, useSocketServer } from "@/hooks/useSocketHooks";
+// import { initSocket, useSocketServer } from "@/hooks/useSocketHooks";
 import { useRoute } from "vue-router";
-import { computed, onMounted } from "vue";
+import { computed } from "vue";
 
-const { listeningAllMessage } = useSocketServer();
+// const { listeningAllMessage } = useSocketServer();
 
 const exceptRouterName = ["Login"];
 const route = useRoute();
@@ -19,11 +19,11 @@ const cachedViews = computed(() => {
 const showTabbar = computed(() =>
   exceptRouterName.indexOf(route.name as string) === -1 ? true : false
 );
-onMounted(() => {
-  console.log("项目 init....");
-  initSocket();
-  listeningAllMessage();
-});
+// onMounted(() => {
+//   console.log("项目 init....");
+//   initSocket();
+//   listeningAllMessage();
+// });
 </script>
 
 <template>
