@@ -1,5 +1,6 @@
 // stores/counter.js
 import { defineStore } from "pinia";
+import { emitLogin } from "@/hooks/useSocketHooks";
 
 export const useUserInfoStore = defineStore("counter", {
   state: () => {
@@ -12,6 +13,11 @@ export const useUserInfoStore = defineStore("counter", {
     changeUserInfo(userInfo: any) {
       this.userInfo = userInfo;
       window.localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      emitLogin();
+    },
+    logout() {
+      this.userInfo = {};
+      window.localStorage.setItem("userInfo", JSON.stringify(this.userInfo));
     }
   }
 });
