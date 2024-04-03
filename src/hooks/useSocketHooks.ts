@@ -6,7 +6,7 @@ import {
   type ChatMessage
 } from "@/store/modules/message";
 import { useUserInfoStore } from "@/store/modules/userInfo";
-const socket = io("http://localhost:3000");
+const socket = io("/io");
 export type event = "chat" | "comment" | "like" | "follow";
 export interface Message {
   receiverId: string;
@@ -21,13 +21,15 @@ export const initSocket = async () => {
       reject("error");
     });
     socket.on("connect", () => {
-      socket.emit("login", useUserInfoStore().userInfo.id);
       console.log("socket connect ....");
       resolve("ok");
     });
   });
 };
-// const socketStore = useMessageInfoStore();
+export const emitLogin = () => {
+  console.log("login.....");
+  socket.emit("login", useUserInfoStore().userInfo.id);
+};
 export const useSocketServer = () => {
   const handleSubmitNewMessage = (event: event, message: Message) => {
     const { receiverId, senderId } = message;
