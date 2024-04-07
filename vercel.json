@@ -1,0 +1,6 @@
+{
+    "rewrites": [
+        { "source": "/admin/:path(.*)", "destination": "https://www.0637.top/admin/:path" },
+        { "source": "/(.*)", "destination": "/index.html" }
+    ]
+}

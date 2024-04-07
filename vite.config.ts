@@ -72,14 +72,6 @@ export default defineConfig(({ mode }) => {
           // pathRewrite: {
           // "^/api": "" // 如果后端接口没有/api前缀，可以将其删除
           // }
-        },
-        "/io": {
-          target: "https://www.0637.top", // pre
-          // target: "http://localhost:3000", // local
-          changeOrigin: true
-          // pathRewrite: {
-          // "^/api": "" // 如果后端接口没有/api前缀，可以将其删除
-          // }
         }
       }
     },
