@@ -66,7 +66,7 @@ export default defineConfig(({ mode }) => {
       // doc: https://github.com/pengzhanbo/vite-plugin-mock-dev-server
       proxy: {
         "/admin": {
-          target: "https://0637.top/", // pre
+          target: "https://www.0637.top", // pre
           // target: "http://localhost:3000", // local
           changeOrigin: true
           // pathRewrite: {
@@ -74,7 +74,7 @@ export default defineConfig(({ mode }) => {
           // }
         },
         "/io": {
-          target: "https://0637.top/", // pre
+          target: "https://www.0637.top", // pre
           // target: "http://localhost:3000", // local
           changeOrigin: true
           // pathRewrite: {
