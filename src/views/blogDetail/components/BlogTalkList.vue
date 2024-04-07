@@ -65,7 +65,7 @@ const addTalk = async () => {
     };
     // 顶级评论回复
     if (activeTalkId.value == "-1") {
-      talkList.value.unshift(temp);
+      talkList.value.unshift(temp as TalkDetail);
       return;
     }
     // 盖楼的评论...
