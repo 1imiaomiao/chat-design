@@ -2,7 +2,7 @@
 import TalkListBlock from "./components/TalkListBlock.vue";
 import MessageModal from "./components/MessageModal.vue";
 import { useMessageInfoStore } from "@/store/modules/message";
-import { computed } from "vue";
+import { computed,ref } from "vue";
 
 const messageStore = useMessageInfoStore();
 
