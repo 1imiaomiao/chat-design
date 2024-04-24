@@ -1,5 +1,7 @@
 <template>
-  <router-view />
+  <keep-alive>
+    <router-view />
+  </keep-alive>
 </template>
 <script lang="ts" setup>
 import { onMounted } from "vue";

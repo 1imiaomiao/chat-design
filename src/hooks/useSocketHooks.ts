@@ -6,7 +6,7 @@ import {
   type ChatMessage
 } from "@/store/modules/message";
 import { useUserInfoStore } from "@/store/modules/userInfo";
-const socket = io("https://www.0637.top");
+const socket = io("http://localhost:3000");
 export type event = "chat" | "comment" | "like" | "follow";
 export interface Message {
   receiverId: string;

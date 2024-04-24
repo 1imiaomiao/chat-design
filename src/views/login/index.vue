@@ -55,9 +55,8 @@ const confirmLogin = async () => {
       lastLoginTime: Date.now()
     });
     token.value = res.token;
-  } catch (error) {
-    console.log(">>>>>>", error);
-    showNotify({ type: "warning", message: "接口报错~" });
+  } catch (error: any) {
+    showNotify({ type: "warning", message: error.message || "接口报错~" });
     return Promise.reject();
   }
 };

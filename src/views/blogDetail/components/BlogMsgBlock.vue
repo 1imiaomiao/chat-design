@@ -6,6 +6,7 @@ import { changeLikeStatusApi } from "@/api/userMsg";
 import { useRouter } from "vue-router";
 import { showNotify } from "vant";
 import { useUserInfoStore } from "@/store/modules/userInfo";
+import dayjs from "dayjs";
 
 interface Props {
   id: string;
@@ -91,7 +92,9 @@ onMounted(() => {
         <svg-icon name="like" />
         {{ blogDetail.likeCount }}
       </div>
-      <div class="blogDetail-otherMsg-time">{{ blogDetail.createdAt }}</div>
+      <div class="blogDetail-otherMsg-time">
+        {{ dayjs(blogDetail.createdAt).format("YYYY-MM-DD HH:mm") }}
+      </div>
     </div>
   </div>
 </template>
@@ -112,6 +115,8 @@ onMounted(() => {
     max-height: 320px;
     object-fit: cover;
     border-radius: 8px;
+    box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.16),
+      0 3px 6px 0 rgba(0, 0, 0, 0.12), 0 5px 12px 4px rgba(0, 0, 0, 0.09);
   }
   &-header {
     display: flex;

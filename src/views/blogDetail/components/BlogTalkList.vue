@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 import type { TalkDetail } from "@/api/blogAbout";
 import {
   getBlogTalkDetailApi,
@@ -7,6 +7,7 @@ import {
   changeTalkLikeStatus
 } from "@/api/blogAbout";
 import { useUserInfoStore } from "@/store/modules/userInfo";
+import dayjs from "dayjs";
 
 const initPageInfo = {
   pageNo: 0,
@@ -97,24 +98,31 @@ const handleWeakUpTalk = (id: string, userId?: string) => {
 };
 const handleClickTalkLike = async (item: any) => {
   if (item.likeStatus === 1) {
-    await changeTalkLikeStatus({
-      userId: userInfo.value.id,
-      talkId: item.id,
-      status: 0,
-      commenterId: item.userId
-    });
-    item.likeStatus = 0;
-    item.likeCount--;
+    try {
+      await changeTalkLikeStatus({
+        userId: userInfo.value.id,
+        talkId: item.id,
+        status: 0,
+        commenterId: item.userId
+      });
+      item.likeStatus = 0;
+      item.likeCount--;
+    } catch (error) {
+      console.log("error", error);
+    }
     return;
   }
-  await changeTalkLikeStatus({
-    userId: userInfo.value.id,
-    id: item.id,
-    status: 1
-  });
-  item.likeStatus = 1;
-  item.likeCount++;
-  console.log("点赞....");
+  try {
+    await changeTalkLikeStatus({
+      userId: userInfo.value.id,
+      id: item.id,
+      status: 1
+    });
+    item.likeStatus = 1;
+    item.likeCount++;
+  } catch (error) {
+    console.log("error", error);
+  }
 };
 onMounted(async () => {
   talkList.value = await getTalkList();
@@ -129,17 +137,20 @@ onMounted(async () => {
           <img :src="item.coverImg" />
           {{ item.username }}
         </div>
-        <div class="talk-list-header-right" @click="handleClickTalkLike(item)">
-          <svg-icon
-            :class="{ 'active-zan': item.likeStatus === 1 }"
-            name="zan"
-          />
+        <div
+          class="talk-list-header-right"
+          @click="handleClickTalkLike(item)"
+          :class="{ 'active-zan': item.likeStatus === 1 }"
+        >
+          <svg-icon name="zan" />
           <span>{{ item.likeCount }}</span>
         </div>
       </div>
       <div class="talk-list-content">
         <div @click.stop="handleWeakUpTalk(item.id)">{{ item.content }}</div>
-        <div class="talk-list-content-time">{{ item.createdAt }}</div>
+        <div class="talk-list-content-time">
+          {{ dayjs(item.createdAt).format("YYYY-MM-DD HH:mm:ss") }}
+        </div>
         <van-divider
           v-if="item.talkCount && !item.sonComment"
           @click.stop="handleShowComment(item)"
@@ -164,12 +175,10 @@ onMounted(async () => {
             </div>
             <div
               class="talk-list-header-right"
+              :class="{ 'active-zan': sonCommentItem.likeStatus === 1 }"
               @click="handleClickTalkLike(sonCommentItem)"
             >
-              <svg-icon
-                :class="{ 'active-zan': sonCommentItem.likeStatus === 1 }"
-                name="zan"
-              />
+              <svg-icon name="zan" />
               <span>{{ sonCommentItem.likeCount }}</span>
             </div>
           </div>

@@ -5,7 +5,7 @@ import {
 } from "vue-router";
 import routes from "./routes";
 import { useCachedViewStoreHook } from "@/store/modules/cachedView";
-import NProgress from "@/utils/progress";
+// import NProgress from "@/utils/progress";
 import setPageTitle from "@/utils/set-page-title";
 import { useGlobalToken } from "@/utils/useModalToken";
 import { showNotify } from "vant";
@@ -33,7 +33,7 @@ router.beforeEach((to: toRouteType, from, next) => {
     });
     next({ name: "Login" });
   }
-  NProgress.start();
+  // NProgress.start();
   // 路由缓存
   useCachedViewStoreHook().addCachedView(to);
   // 页面 title
@@ -41,8 +41,8 @@ router.beforeEach((to: toRouteType, from, next) => {
   next();
 });
 
-router.afterEach(() => {
-  NProgress.done();
-});
+// router.afterEach(() => {
+//   NProgress.done();
+// });
 
 export default router;
