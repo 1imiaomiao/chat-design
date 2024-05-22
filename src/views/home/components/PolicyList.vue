@@ -8,11 +8,8 @@ import {
   changeLikeStatusApi
 } from "@/api/userMsg";
 import { useUserInfoStore } from "@/store/modules/userInfo";
-import PolicyList from "./components/PolicyList.vue";
-// import { vScroll } from "@vueuse/components";
 import { useScroll } from "@vueuse/core";
 import { showNotify } from "vant";
-// import { useInfiniteScroll } from "@vueuse/core";
 
 interface Props {
   userId: string;
@@ -24,7 +21,7 @@ const initPageInfo = {
   pageSize: 5,
   total: 0
 };
-const activeType = ref<"dynamic" | "policy">("dynamic");
+const activeType = ref<"like" | "content">("content");
 const blogList = ref<BlogMsg[]>([]);
 const pageInfo = ref({ ...initPageInfo });
 const el = ref<HTMLElement>();
@@ -38,7 +35,7 @@ watchEffect(async () => {
     toBottom.value &&
     pageInfo.value.total !== blogList.value.length
   ) {
-    if (activeType.value === "dynamic") await getBlogList();
+    if (activeType.value === "content") await getBlogList();
     else getLikeList();
   }
 });
@@ -61,6 +58,7 @@ const getBlogList = async () => {
     const res = await getBlogListApi({
       userId: props.userId, // 查看的博文列表作者的id
       browseId: userMsg.value.id, //浏览者的id
+      type: "policy",
       pageNo: pageInfo.value.pageNo++,
       pageSize: pageInfo.value.pageSize
     });
@@ -101,8 +99,6 @@ const changeLikeState = async (temp: BlogMsg) => {
       temp.likeStatus = 1;
     } catch (error: any) {
       showNotify({ message: error.message, type: "warning" });
-
-      // showNotify({ message: error, type: "warning" });
       console.log("error", error);
     }
   }
@@ -118,60 +114,43 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div class="blogList" ref="el">
-    <van-tabs
-      v-model:active="activeType"
-      class="blogList-head"
-      @change="requestBlogList"
+  <div class="blogList">
+    <div
+      class="blogList-item"
+      v-for="item in blogList"
+      :key="item.id"
+      @click="skipBlogDetail(item.id)"
     >
-      <van-tab title="关注" name="dynamic"></van-tab>
-      <!-- <van-tab title="社区帮助" name="content"></van-tab> -->
-      <van-tab title="公文" name="policy"></van-tab>
-    </van-tabs>
-    <template v-if="activeType === 'dynamic'">
-      <div class="blogList-imgs">
+      <p>{{ item.title }}</p>
+      <p class="desc">{{ item.content }}</p>
+      <div class="otherMsg">
+        <img
+          :src="item.userAvatar"
+          style="border-radius: 100%"
+          class="w-[24px] h-[24px]"
+        />
+        <div>{{ item.authorName }}</div>
         <div
-          class="blogList-imgs-item"
-          v-for="item in blogList"
-          :key="item.id"
-          @click="skipBlogDetail(item.id)"
+          style="color: #999"
+          class="flex gap-[8px] items-center"
+          @click.stop="changeLikeState(item)"
         >
-          <img :src="item.coverImg" class="cover-img" />
-          <div>
-            <div class="mb-8px">{{ item.title }}</div>
-            <div class="flex" style="justify-content: space-between">
-              <div class="flex items-center gap-[8px]">
-                <img
-                  :src="item.userAvatar"
-                  style="border-radius: 100%"
-                  class="w-[24px] h-[24px]"
-                />
-                <span>{{ item.authorName }}</span>
-              </div>
-              <div
-                style="color: #999"
-                class="flex gap-[8px] items-center"
-                @click.stop="changeLikeState(item)"
-              >
-                <svg-icon
-                  name="like"
-                  :class="{ 'active-like': item.likeStatus === 1 }"
-                />
-                <span> {{ item.likeCount }}</span>
-              </div>
-            </div>
-          </div>
+          <svg-icon
+            name="like"
+            :class="{ 'active-like': item.likeStatus === 1 }"
+          />
+          <span> {{ item.likeCount }}</span>
         </div>
       </div>
-      <van-empty v-if="!blogList.length" description="暂无数据~" />
-      <p
-        v-else-if="blogList.length >= pageInfo.total"
-        style="color: #999; text-align: center"
-      >
-        到底了~
-      </p>
-    </template>
-    <PolicyList v-else />
+      <van-divider />
+    </div>
+    <van-empty v-if="!blogList.length" description="暂无数据~" />
+    <p
+      v-else-if="blogList.length >= pageInfo.total"
+      style="color: #999; text-align: center"
+    >
+      到底了~
+    </p>
   </div>
 </template>
 <style lang="less" scoped>
@@ -183,31 +162,34 @@ onMounted(() => {
   box-sizing: border-box;
   border-radius: 8px;
   background: #fff;
-  &-head {
-    :deep(.van-tabs__wrap) {
-      height: 24px;
-      margin-bottom: 12px;
+  .blogList-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    .title {
+      font-weight: 600;
     }
+    .desc {
+      overflow: hidden;
+      color: #999;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      /* 设置宽度和高度 */
+      width: 100%;
+      height: 40px;
+    }
+    .otherMsg {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      align-content: center;
+    }
+    // border-bottom: 1px solid #999;
   }
-  &-imgs {
-    column-count: 2;
-    gap: 8px;
-    flex-wrap: nowrap;
-    &-item {
-      position: relative;
-      margin-bottom: 8px;
-      break-inside: avoid;
-      .cover-img {
-        width: 100%;
-        min-height: 180px;
-        max-height: 240px;
-        border-radius: 8px;
-        object-fit: cover;
-      }
-      .active-like {
-        color: red;
-      }
-    }
+  .active-like {
+    color: red;
   }
 }
 </style>

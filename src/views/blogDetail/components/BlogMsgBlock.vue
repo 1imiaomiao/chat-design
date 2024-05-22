@@ -7,6 +7,7 @@ import { useRouter } from "vue-router";
 import { showNotify } from "vant";
 import { useUserInfoStore } from "@/store/modules/userInfo";
 import dayjs from "dayjs";
+// import VueMarkdown from "vue-markdown";
 
 interface Props {
   id: string;
@@ -62,7 +63,9 @@ const handleClikeLike = async () => {
 const skipRouterBack = () => {
   router.back();
 };
-
+const skipAi = () => {
+  console.log(">>>>>跳转AI解读");
+};
 const skipPersonHome = () => {
   router.push({
     path: "/mine",
@@ -83,6 +86,7 @@ onMounted(() => {
     <img class="blogDetail-cover" :src="blogDetail.coverImg" />
     <div class="blogDetail-title">{{ blogDetail.title }}</div>
     <div class="blogDetail-text">{{ blogDetail.content }}</div>
+    <!-- <vue-markdown :source="blogDetail.content"></vue-markdown> -->
     <div class="blogDetail-otherMsg">
       <div
         class="blogDetail-otherMsg-like"
@@ -97,6 +101,7 @@ onMounted(() => {
       </div>
     </div>
   </div>
+  <van-floating-bubble axis="xy" icon="chat" magnetic="x" @click="skipAi" />
 </template>
 <style lang="less" scoped>
 .blogDetail {

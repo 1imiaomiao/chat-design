@@ -24,9 +24,7 @@ export interface toRouteType extends RouteLocationNormalized {
 
 router.beforeEach((to: toRouteType, from, next) => {
   const token = useGlobalToken();
-  // console.log(">>>>",to)
-  // if(to)
-  if (!token.value && to.name !== "Login") {
+  if (!token.value && to.name !== "Login" && to.name !== "LoginAdmin") {
     showNotify({
       message: "你还未登录,请先登录",
       duration: 1500
@@ -40,7 +38,5 @@ router.beforeEach((to: toRouteType, from, next) => {
   setPageTitle(to.meta.title);
   next();
 });
-
-
 
 export default router;
