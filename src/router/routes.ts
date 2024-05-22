@@ -18,6 +18,14 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "loginAdmin",
+        name: "LoginAdmin",
+        component: () => import("@/views/login/login_admin.vue"),
+        meta: {
+          title: "工作人员登录"
+        }
+      },
+      {
         path: "home",
         name: "Home",
         component: Home,

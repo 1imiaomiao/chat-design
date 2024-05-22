@@ -8,6 +8,12 @@ import { showNotify } from "vant";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
+const props = defineProps<{
+  type: {
+    default: "dynamic";
+    type: "dynamic" | "policy";
+  };
+}>();
 
 const blogMsg = ref<BlogCreate>({
   coverImg: null,
@@ -37,10 +43,12 @@ const handleCreateArticle = async () => {
     formData.append("title", blogMsg.value.title);
     formData.append("content", blogMsg.value.content);
     formData.append("userId", userInfo.value.id);
+    formData.append("type", props.type);
     await createBlogApi(formData);
     showNotify({ message: "发布成功！", type: "primary" });
     router.back();
   } catch (error) {
+    showNotify({ message: "发布失败！", type: "danger" });
     console.log("error", error);
   }
 };
@@ -52,7 +60,11 @@ defineExpose({
 </script>
 <template>
   <van-form ref="formRef">
-    <van-field name="coverImg" class="edit-upload">
+    <van-field
+      name="coverImg"
+      class="edit-upload"
+      v-if="props.type === 'dynamic'"
+    >
       <template #input>
         <van-uploader :max-count="1" v-model="fileProxy" result-type="file" />
       </template>
@@ -73,9 +85,11 @@ defineExpose({
         v-model="blogMsg.content"
         placeholder="添加正文"
         type="textarea"
-        rows="4"
+        rows="12"
         autosize
         name="content"
+        show-word-limit
+        maxlength="1000"
         :rules="[{ required: true, message: '请填写' }]"
       />
     </div>

@@ -41,8 +41,6 @@ router.beforeEach((to: toRouteType, from, next) => {
   next();
 });
 
-// router.afterEach(() => {
-//   NProgress.done();
-// });
+
 
 export default router;

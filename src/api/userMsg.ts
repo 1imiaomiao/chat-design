@@ -65,6 +65,7 @@ export interface UserMsg {
   username: string;
   password?: string;
   coverImg: string | File;
+  type: "admin" | "user";
 }
 export function queryUserMsg(data: any): Promise<any> {
   return http.request({

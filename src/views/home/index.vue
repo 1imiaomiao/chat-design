@@ -124,7 +124,8 @@ onMounted(() => {
       @change="requestBlogList"
     >
       <van-tab title="关注" name="content"></van-tab>
-      <van-tab title="猜你喜欢" name="content"></van-tab>
+      <!-- <van-tab title="社区帮助" name="content"></van-tab> -->
+      <van-tab title="公文" name="content"></van-tab>
     </van-tabs>
     <div class="blogList-imgs">
       <div

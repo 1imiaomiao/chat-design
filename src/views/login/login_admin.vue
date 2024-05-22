@@ -41,9 +41,11 @@ const confirmLogin = async () => {
   try {
     const res = await loginApi({
       ...loginMsg.value,
-      password: md5(loginMsg.value.password)
+      password: md5(loginMsg.value.password),
+      type: "admin"
     });
-    const { id, username, fanNum, followNum, likeNum, email, coverImg } = res;
+    const { id, username, fanNum, followNum, likeNum, email, coverImg, type } =
+      res;
     useUserInfoStore().changeUserInfo({
       id,
       username,
@@ -52,7 +54,8 @@ const confirmLogin = async () => {
       fanNum,
       followNum,
       likeNum,
-      lastLoginTime: Date.now()
+      lastLoginTime: Date.now(),
+      type
     });
     token.value = res.token;
   } catch (error: any) {
@@ -68,12 +71,15 @@ const onSubmitRegister = async () => {
   try {
     const res = await registerApi({
       ...loginMsg.value,
-      password: md5(loginMsg.value.password)
+      password: md5(loginMsg.value.password),
+      type: "admin"
     });
     showNotify({ message: "注册成功，请重新登录~", type: "success" });
     activeTab.value = "login";
-  } catch (error) {
-    console.log("errror", error);
+  } catch (error: any) {
+    // showNotify({ message: "注册成功，请重新登录~", type: "success" });
+    showNotify({ message: error?.message || "网络错误", type: "warning" });
+    console.log("errrsssor", error);
   }
 };
 </script>
@@ -143,15 +149,15 @@ const onSubmitRegister = async () => {
             placeholder="请输入验证码"
             :rules="[{ required: true, message: '验证码' }]"
           />
-          <div class="flex justify-center pt-[4px] pb-[4px]">
+          <div class="flex justify-center pt-[4px] pb-[4px] login-msg">
             <div
               v-html="codeSvg || '点击获取验证码'"
               @click="getCodeText"
             ></div>
           </div>
           <van-divider />
-          <span class="tips" @click="router.push('/loginAdmin')"
-            >社区工作人员点击此处跳转</span
+          <span class="tips" @click="router.push('/login')"
+            >居民账号点此处跳转</span
           >
         </van-cell-group>
 
@@ -161,10 +167,6 @@ const onSubmitRegister = async () => {
           </van-button>
         </div>
       </van-form>
-      <!-- <van-button round >社区工作人员点击此处跳转</van-button> -->
-      <!-- <div class="tips">
-        社区工作人员登录？<a @click="router.push('/loginAdmin')">go！</a>
-      </div> -->
     </div>
   </div>
 </template>
@@ -172,13 +174,16 @@ const onSubmitRegister = async () => {
 .login {
   width: 100vw;
   height: 100vh;
-  background: url("../../assets/image/cover_bg.jpg");
-  // opacity: 0.5;
+  background-color: #2776ff;
   background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: -1;
+  color: #fff;
+  :deep(.van-tab--active) {
+    color: #fff;
+  }
   .login-mask {
     width: 100%;
     height: 100%;
@@ -193,6 +198,8 @@ const onSubmitRegister = async () => {
     height: 40%;
     border-radius: 8px;
     z-index: 1;
+    margin-bottom: 6px;
+    border-radius: 6px;
     :deep(.van-field) {
       padding-block: 16px;
     }

@@ -13,7 +13,8 @@ const userMsg = ref<UserMsg & { coverImg: any }>({
   coverImg: "",
   introduce: "",
   email: "",
-  id: ""
+  id: "",
+  type: "user"
 });
 const formRef = ref();
 
