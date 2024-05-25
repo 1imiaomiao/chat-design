@@ -64,7 +64,10 @@ const skipRouterBack = () => {
   router.back();
 };
 const skipAi = () => {
-  console.log(">>>>>跳转AI解读");
+  router.push({
+    name: "AiChat",
+    query: { id: props.id }
+  });
 };
 const skipPersonHome = () => {
   router.push({

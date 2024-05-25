@@ -70,6 +70,15 @@ export default defineConfig(({ mode }) => {
           // pathRewrite: {
           // "^/api": "" // 如果后端接口没有/api前缀，可以将其删除
           // }
+        },
+        "/AI": {
+          // target: "https://www.0637.top", // pre
+          target:
+            "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/ernie-lite-8k?access_token=24.b8155792a0a3c6ba32461b7674ed3465.2592000.1719237596.282335-72354065", // local
+          changeOrigin: true
+          // pathRewrite: {
+          // "^/api": "" // 如果后端接口没有/api前缀，可以将其删除
+          // }
         }
       }
     },

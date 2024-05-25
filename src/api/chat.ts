@@ -11,7 +11,7 @@ import { http } from "@/utils/http";
 // }
 export function queryList(data: any) {
   return http.request<any>({
-    url: `/chat/queryList`,
+    url: `/admin/chat/queryList`,
     method: "POST",
     data
   });
@@ -28,14 +28,14 @@ export interface ChatMsg {
 }
 export function queryChatDetail(data: Object) {
   return http.request<any>({
-    url: `/chat/query`,
+    url: `/admin/chat/query`,
     method: "POST",
     data
   });
 }
 export function sendChatMsgApi(data: Object) {
   return http.request({
-    url: "/chat/create",
+    url: "/admin/chat/create",
     method: "POST",
     data
   });

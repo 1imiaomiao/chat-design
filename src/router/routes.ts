@@ -85,6 +85,15 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "ai-chat",
+        name: "AiChat",
+        component: () => import("@/views/blogDetail/aiChat.vue"),
+        meta: {
+          title: "AI解读",
+          noCache: true
+        }
+      },
+      {
         path: "setting",
         name: "Setting",
         component: () => import("@/views/setting/index.vue"),

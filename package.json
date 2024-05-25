@@ -28,6 +28,7 @@
     "@vueuse/components": "^10.9.0",
     "@vueuse/core": "^10.9.0",
     "axios": "^1.5.1",
+    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.10",
     "md5": "^2.3.0",
     "normalize.css": "^8.0.1",

@@ -37,14 +37,14 @@ export interface BlogMsg {
 }
 export function getBlogListApi(data: any): Promise<any> {
   return http.request({
-    url: `/article/list`,
+    url: `/admin/article/list`,
     method: "POST",
     data
   });
 }
 export function getLikeListApi(data: any): Promise<any> {
   return http.request({
-    url: `/article/likeList`,
+    url: `/admin/article/likeList`,
     method: "POST",
     data
   });
@@ -52,7 +52,7 @@ export function getLikeListApi(data: any): Promise<any> {
 
 export function changeLikeStatusApi(data: any): Promise<any> {
   return http.request({
-    url: `/article/changeLike`,
+    url: `/admin/article/changeLike`,
     method: "post",
     data
   });
@@ -69,14 +69,14 @@ export interface UserMsg {
 }
 export function queryUserMsg(data: any): Promise<any> {
   return http.request({
-    url: `/user/query`,
+    url: `/admin/user/query`,
     method: "post",
     data
   });
 }
 export function updateUserMsg(data: any): Promise<any> {
   return http.request({
-    url: `/user/update`,
+    url: `/admin/user/update`,
     method: "post",
     data,
     headers: {
@@ -87,7 +87,7 @@ export function updateUserMsg(data: any): Promise<any> {
 
 export function userListApi(data: object) {
   return http.request({
-    url: `/user/list`,
+    url: `/admin/user/list`,
     method: "post",
     data
   });
