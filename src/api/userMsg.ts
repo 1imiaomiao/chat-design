@@ -84,3 +84,11 @@ export function updateUserMsg(data: any): Promise<any> {
     }
   });
 }
+
+export function userListApi(data: object) {
+  return http.request({
+    url: `/user/list`,
+    method: "post",
+    data
+  });
+}

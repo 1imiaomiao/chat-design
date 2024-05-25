@@ -41,6 +41,7 @@ const confirmLogin = async () => {
   try {
     const res = await loginApi({
       ...loginMsg.value,
+      type: "user",
       password: md5(loginMsg.value.password)
     });
     const { id, username, fanNum, followNum, likeNum, email, coverImg } = res;

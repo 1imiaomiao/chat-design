@@ -26,6 +26,14 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: "residentList",
+        name: "ResidentList",
+        component: () => import("@/views/residentList/index.vue"),
+        meta: {
+          title: "管理居民列表"
+        }
+      },
+      {
         path: "home",
         name: "Home",
         component: Home,
