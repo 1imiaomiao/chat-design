@@ -8,6 +8,7 @@ import {
 } from "@/api/blogAbout";
 import { useUserInfoStore } from "@/store/modules/userInfo";
 import dayjs from "dayjs";
+import { showToast } from "vant";
 
 const initPageInfo = {
   pageNo: 0,
@@ -97,31 +98,38 @@ const handleWeakUpTalk = (id: string, userId?: string) => {
   editRef.value.focus();
 };
 const handleClickTalkLike = async (item: any) => {
+  if (userInfo.value.id === item.userId) {
+    showToast("不能给自己点赞~");
+    return;
+  }
   if (item.likeStatus === 1) {
     try {
       await changeTalkLikeStatus({
         userId: userInfo.value.id,
         talkId: item.id,
         status: 0,
-        commenterId: item.userId
+        commenterId: item.userId,
+        articleId: props.id
       });
       item.likeStatus = 0;
       item.likeCount--;
+    } catch (error: any) {
+      showToast(error.message);
+      console.log("error", error);
+    }
+  } else {
+    try {
+      await changeTalkLikeStatus({
+        userId: userInfo.value.id,
+        id: item.id,
+        status: 1,
+        articleId: props.id
+      });
+      item.likeStatus = 1;
+      item.likeCount++;
     } catch (error) {
       console.log("error", error);
     }
-    return;
-  }
-  try {
-    await changeTalkLikeStatus({
-      userId: userInfo.value.id,
-      id: item.id,
-      status: 1
-    });
-    item.likeStatus = 1;
-    item.likeCount++;
-  } catch (error) {
-    console.log("error", error);
   }
 };
 onMounted(async () => {

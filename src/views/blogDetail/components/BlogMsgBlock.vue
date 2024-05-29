@@ -5,8 +5,9 @@ import { getBlogDetailApi } from "@/api/blogAbout";
 import { changeLikeStatusApi } from "@/api/userMsg";
 import { useRouter } from "vue-router";
 import { showNotify } from "vant";
-import { useUserInfoStore } from "@/store/modules/userInfo";
 import dayjs from "dayjs";
+import { useUserInfoStore } from "@/store/modules/userInfo";
+
 // import VueMarkdown from "vue-markdown";
 
 interface Props {
@@ -104,7 +105,13 @@ onMounted(() => {
       </div>
     </div>
   </div>
-  <van-floating-bubble axis="xy" icon="chat" magnetic="x" @click="skipAi" />
+  <van-floating-bubble
+    axis="xy"
+    icon="chat"
+    magnetic="x"
+    @click="skipAi"
+    v-if="!blogDetail.coverImg"
+  />
 </template>
 <style lang="less" scoped>
 .blogDetail {

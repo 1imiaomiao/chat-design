@@ -151,6 +151,7 @@ const onSubmitRegister = async () => {
           />
           <div class="flex justify-center pt-[4px] pb-[4px] login-msg">
             <div
+              class="text-[#999] flex align-center"
               v-html="codeSvg || '点击获取验证码'"
               @click="getCodeText"
             ></div>

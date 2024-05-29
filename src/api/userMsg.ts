@@ -92,3 +92,33 @@ export function userListApi(data: object) {
     data
   });
 }
+export function delUserApi(data: object) {
+  return http.request({
+    url: `/admin/user/del`,
+    method: "post",
+    data
+  });
+}
+
+export function activeUserApi(data: object) {
+  return http.request({
+    url: `/admin/user/active`,
+    method: "post",
+    data
+  });
+}
+
+export function changePwdApi(data: object) {
+  return http.request({
+    url: `/admin/user/changePwd`,
+    method: "post",
+    data
+  });
+}
+export function followApi(data: object) {
+  return http.request({
+    url: `/admin/user/follow`,
+    method: "post",
+    data
+  });
+}

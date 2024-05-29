@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, toRefs, onMounted, computed, watchEffect } from "vue";
 import type { BlogMsg } from "@/api/userMsg";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import {
   getBlogListApi,
   getLikeListApi,
@@ -18,18 +18,20 @@ interface Props {
 }
 const props = defineProps<Props>();
 const router = useRouter();
+const route = useRoute();
 const initPageInfo = {
   pageNo: 1,
   pageSize: 5,
   total: 0
 };
-const activeType = ref<"like" | "content">("like");
+const activeType = ref<"like" | "content" | "policy">("like");
 const blogList = ref<BlogMsg[]>([]);
 const pageInfo = ref({ ...initPageInfo });
 const el = ref<HTMLElement>();
 const { arrivedState, directions } = useScroll(el);
 const { bottom } = toRefs(arrivedState);
 const { bottom: toBottom } = toRefs(directions);
+const userType = computed(() => useUserInfoStore().userInfo.type);
 
 watchEffect(async () => {
   if (
@@ -56,6 +58,21 @@ const getLikeList = async () => {
     console.log("error", error);
   }
 };
+const getPolicyList = async () => {
+  try {
+    const res = await getBlogListApi({
+      userId: props.userId, // 查看的博文列表作者的id
+      browseId: userMsg.value.id, //浏览者的id
+      pageNo: pageInfo.value.pageNo++,
+      pageSize: pageInfo.value.pageSize,
+      type: "policy"
+    });
+    blogList.value.push(...res.list);
+    pageInfo.value.total = res.total;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
 const getBlogList = async () => {
   try {
     const res = await getBlogListApi({
@@ -74,6 +91,7 @@ const requestBlogList = () => {
   blogList.value = [];
   pageInfo.value = { ...initPageInfo };
   if (activeType.value === "like") getLikeList();
+  else if (activeType.value === "policy") getPolicyList();
   else getBlogList();
 };
 const changeLikeState = async (temp: BlogMsg) => {
@@ -125,6 +143,11 @@ onMounted(() => {
     >
       <van-tab title="喜欢" name="like"></van-tab>
       <van-tab title="动态" name="content"></van-tab>
+      <van-tab
+        title="公文"
+        name="policy"
+        v-if="userType === 'admin' && !route.query.id"
+      ></van-tab>
     </van-tabs>
     <div class="blogList-imgs">
       <div
@@ -133,7 +156,12 @@ onMounted(() => {
         :key="item.id"
         @click="skipBlogDetail(item.id)"
       >
-        <img :src="item.coverImg" class="cover-img" />
+        <svg-icon
+          v-if="item.type === 'policy' || !item.coverImg"
+          name="policy_cover"
+          style="width: 100%; height: 200px"
+        ></svg-icon>
+        <img :src="item.coverImg" class="cover-img" v-else />
         <div>
           <div class="mb-8px">{{ item.title }}</div>
           <div class="flex" style="justify-content: space-between">

@@ -4,6 +4,7 @@ import { useUserInfoStore } from "@/store/modules/userInfo";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 import { queryUserMsg } from "@/api/userMsg";
+// import { showToast } from "vant";
 
 const userStore = useUserInfoStore();
 const router = useRouter();
@@ -13,6 +14,15 @@ const userMsg = ref(userStore.userInfo);
 // const userId = computed(() => route.query.id);
 const storeInfoMsg = computed(() => userStore.userInfo);
 
+// const handleFollow = async () => {
+//   try {
+//     await followApi({ userId: userMsg.value.id, followUserId: route.query.id });
+//     userMsg.value.followNum++;
+//   } catch (error: any) {
+//     showToast(error.message);
+//     console.log("error", error);
+//   }
+// };
 const initUserMsg = async () => {
   if (!route.query.id) return;
   try {
@@ -58,9 +68,9 @@ onMounted(() => {
           class="flex gap-[8px]"
           v-if="route.query.id && route.query.id != storeInfoMsg?.id"
         >
-          <van-button round type="primary" color="#478BFF" style="height: 32px">
-            <span>关注</span>
-          </van-button>
+          <!-- <van-button round type="primary" color="#478BFF" style="height: 32px">
+            <span @click="handleFollow">关注</span>
+          </van-button> -->
           <van-button
             round
             type="success"
@@ -77,11 +87,11 @@ onMounted(() => {
   </div>
   <div class="author-msg">
     <div>
-      <div class="author-msg-title">{{ userMsg.followNum }}</div>
+      <div class="author-msg-title">{{ userMsg.followNum || 0 }}</div>
       <div class="author-msg-text">关注</div>
     </div>
     <div>
-      <div class="author-msg-title">{{ userMsg.fanNum }}</div>
+      <div class="author-msg-title">{{ userMsg.fanNum || 0 }}</div>
       <div class="author-msg-text">粉丝</div>
     </div>
   </div>

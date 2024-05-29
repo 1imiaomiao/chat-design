@@ -133,7 +133,12 @@ onMounted(async () => {
       <van-button block native-type="submit" @click="handleSubmit">
         保存
       </van-button>
-      <van-button block type="danger" native-type="submit">
+      <van-button
+        block
+        type="danger"
+        native-type="submit"
+        @click="router.push('/login')"
+      >
         退出登录
       </van-button>
     </div>

@@ -12,38 +12,52 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
+import { useUserInfoStore } from "@/store/modules/userInfo";
+
+const userType = computed(() => useUserInfoStore().userInfo.type);
 
 const active = ref(0);
 
-const tabbarData = reactive([
-  {
-    icon: "wap-home-o",
-    title: "主页",
-    to: {
-      name: "Home"
+const tabbarData = computed(() => {
+  const res = [
+    {
+      icon: "wap-home-o",
+      title: "主页",
+      to: {
+        name: "Home"
+      }
+    },
+    {
+      icon: "add",
+      title: "发布",
+      to: {
+        name: "Publish"
+      }
+    },
+    {
+      icon: "chat-o",
+      title: "私信",
+      to: {
+        name: "Message"
+      }
+    },
+    {
+      icon: "user-o",
+      title: "我的",
+      to: {
+        name: "Mine"
+      }
     }
-  },
-  {
-    icon: "add",
-    title: "发布",
-    to: {
-      name: "Publish"
-    }
-  },
-  {
-    icon: "chat-o",
-    title: "私信",
-    to: {
-      name: "Message"
-    }
-  },
-  {
-    icon: "user-o",
-    title: "我的",
-    to: {
-      name: "Mine"
-    }
-  }
-]);
+  ];
+  if (userType.value === "admin")
+    res.unshift({
+      icon: "friends-o",
+      title: "成员管理",
+      to: {
+        name: "ResidentList"
+      }
+    });
+  return res;
+});
 </script>

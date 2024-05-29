@@ -36,6 +36,7 @@
     "pinia": "^2.1.7",
     "socket.io-client": "^4.7.4",
     "vant": "^4.7.2",
+    "vite-plugin-style-import": "^2.0.0",
     "vue": "^3.3.6",
     "vue-router": "^4.2.5"
   },

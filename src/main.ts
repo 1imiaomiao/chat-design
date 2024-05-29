@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import { store } from "./store";
+// import { showToast, Dialog } from "vant";
 
 // normalize.css
 import "normalize.css/normalize.css";
@@ -16,5 +17,6 @@ import router from "./router";
 const app = createApp(App);
 app.use(store);
 app.use(router);
+// app.use(Dialog);
 
 app.mount("#app");

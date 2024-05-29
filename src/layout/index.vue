@@ -9,7 +9,7 @@ import { computed } from "vue";
 
 // const { listeningAllMessage } = useSocketServer();
 
-const exceptRouterName = ["Login"];
+const exceptRouterName = ["Login", "LoginAdmin"];
 const route = useRoute();
 
 // const tabbarRef = ref();

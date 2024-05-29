@@ -124,7 +124,7 @@ onMounted(() => {
       class="blogList-head"
       @change="requestBlogList"
     >
-      <van-tab title="关注" name="dynamic"></van-tab>
+      <van-tab title="动态" name="dynamic"></van-tab>
       <!-- <van-tab title="社区帮助" name="content"></van-tab> -->
       <van-tab title="公文" name="policy"></van-tab>
     </van-tabs>
