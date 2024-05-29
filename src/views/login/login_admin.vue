@@ -128,11 +128,11 @@ const onSubmitRegister = async () => {
       <van-form v-show="activeTab === 'login'" @submit="handleClickLogin">
         <van-cell-group inset>
           <van-field
-            v-model="loginMsg.username"
-            name="用户名"
-            label="用户名"
-            placeholder="用户名"
-            :rules="[{ required: true, message: '请填写用户名' }]"
+            v-model="loginMsg.email"
+            name="email"
+            label="邮箱"
+            placeholder="邮箱"
+            :rules="[{ required: true, message: '请填写邮箱' }]"
           />
           <van-field
             v-model="loginMsg.password"

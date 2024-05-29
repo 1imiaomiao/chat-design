@@ -89,7 +89,7 @@ defineExpose({
         autosize
         name="content"
         show-word-limit
-        maxlength="1000"
+        maxlength="2000"
         :rules="[{ required: true, message: '请填写' }]"
       />
     </div>

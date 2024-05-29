@@ -125,7 +125,8 @@ onMounted(async () => {
 }
 .message {
   width: 100%;
-  height: 100%;
+  // height: 100%;
+  height: calc(100% - 55px);
   display: flex;
   flex-direction: column;
   background: #f4f4f7;
@@ -149,16 +150,17 @@ onMounted(async () => {
     box-sizing: border-box;
   }
   &-edit {
-    position: sticky;
-    bottom: 50px;
-    opacity: 1;
-    box-sizing: border-box;
-    padding-inline: 16px;
-    padding-bottom: 8px;
-    left: 0px;
-    width: 100%;
-    padding: 12px;
-    z-index: 1;
+    // position: sticky;
+    // bottom: 50px;
+    // opacity: 1;
+    // box-sizing: border-box;
+    // padding-inline: 16px;
+    // padding-bottom: 8px;
+    // left: 0px;
+    // width: 100%;
+    // padding: 12px;
+    // z-index: 1;
+    margin: 8px;
     .icon {
       color: #999;
     }
@@ -180,7 +182,7 @@ onMounted(async () => {
       justify-content: space-between;
     }
     .text {
-      height: 42px;
+      min-height: 42px;
       font-size: 16px;
       padding: 8px 12px;
       border-radius: 10px;

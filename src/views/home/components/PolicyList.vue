@@ -32,8 +32,8 @@ const { bottom: toBottom } = toRefs(directions);
 watchEffect(async () => {
   if (
     bottom.value &&
-    toBottom.value &&
-    pageInfo.value.total !== blogList.value.length
+    toBottom.value
+    // pageInfo.value.total !== blogList.value.length
   ) {
     if (activeType.value === "content") await getBlogList();
     else getLikeList();
